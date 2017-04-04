@@ -1,5 +1,7 @@
 #include "EulerIntegrator.h"
 
+// EulerIntegrator
+
 void EulerIntegrator::simulate() {
 
 	int currentX = 0;
