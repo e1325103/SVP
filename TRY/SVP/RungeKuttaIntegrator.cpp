@@ -14,10 +14,10 @@ void RungeKuttaIntegrator::simulate() {
 		Vector3 startPoint = seedGenerator->getNextPoint();
 		float x = (float)startPoint.x();
 		float y = (float)startPoint.y();
-		float t = 0;
+		float s = 0;
 		float direction = (float)startPoint.z();
 
-		std::list<Vector2> points;
+		std::list<Vector3> points;
 		int lastX = -1;
 		int lastY = -1;
 
@@ -25,8 +25,8 @@ void RungeKuttaIntegrator::simulate() {
 
 		for (int j = 0; j < steps && !outside && !seedGenerator->isFinished(); j++) {
 
-			Vector2 tempV = Integrator::interpolateBilinear(x, y, (int)round(t));
-			tempV.normalise();
+			Vector3 tempV = Integrator::interpolateBilinear(x, y);
+			tempV.normaliseXY();
 
 			float tempX = x + tempV.x() * delta / 2.0f * direction;
 			float tempY = y + tempV.y() * delta / 2.0f * direction;
@@ -35,8 +35,8 @@ void RungeKuttaIntegrator::simulate() {
 
 			if (!outside) {
 
-				Vector2 v = Integrator::interpolateBilinear(tempX, tempY, (int)round(t));
-				v.normalise();
+				Vector3 v = Integrator::interpolateBilinear(tempX, tempY);
+				v.normaliseXY();
 
 				x = x + v.x() * delta * direction;
 				y = y + v.y() * delta * direction;
@@ -47,14 +47,14 @@ void RungeKuttaIntegrator::simulate() {
 					lastX = (int)x;
 					lastY = (int)y;
 					if (seedGenerator->update(Vector2(lastX, lastY))) {
-						points.push_back(Vector2(x, y));
+						points.push_back(Vector3(x, y, v.z()));
 					}
 					else {
 						outside = true;
 					}
 				}
 			}
-			t += timePerStep;
+			s += timePerStep;
 		}
 		if (points.size() > 0) {
 			lines.push_back(points);

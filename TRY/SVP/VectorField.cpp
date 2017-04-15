@@ -19,19 +19,14 @@ const Vector2& VectorField::vector(const int i) const
 	return m_Vectors[i];
 }
 
-const Vector2& VectorField::vector(const int x, const int y, const int t) const
+const Vector2& VectorField::vector(const int x, const int y, const int s) const
 {
-	return m_Vectors[x + y * m_Width + t * m_Size];
+	return m_Vectors[x + y * m_Width + s * m_Size];
 }
 
 const int VectorField::width() const
 {
 	return m_Width;
-}
-
-const int VectorField::steps() const
-{
-	return m_Steps;
 }
 
 const int VectorField::height() const

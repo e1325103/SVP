@@ -1,8 +1,10 @@
-#include "VectorField.h"
-#include "engine.h"
+#include "SVP.h"
+#include <QtWidgets/QApplication>
 
-int main() {
-	VectorField vf = VectorField();
-	vf.import();
-	return 0;
+int main(int argc, char *argv[])
+{
+	QApplication a(argc, argv);
+	SVP w;
+	w.show();
+	return a.exec();
 }
