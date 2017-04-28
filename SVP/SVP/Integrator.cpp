@@ -1,12 +1,16 @@
 #include "Integrator.h"
 
 QPixmap Integrator::paint() {
-	QPixmap pix(vectorField->width(), vectorField->height());
+
+
+	//width - height
+
+	QPixmap pix(500, 500);
 	QPainter* painter = new QPainter(&pix);
 
 	painter->setRenderHint(QPainter::Antialiasing);
 
-	painter->fillRect(0, 0, vectorField->width(), vectorField->height(), QBrush(QColor(255, 255, 255)));
+	//painter->fillRect(0, 0, 500, 500, QBrush(QColor(255, 255, 0)));
 
 	/*if (colour != 10) {
 
@@ -18,14 +22,14 @@ QPixmap Integrator::paint() {
 		}
 	}*/
 
+	Vector3 lineColour = Vector3(0, 0, 255);
+	//int lineColour = 255;
 
-	int lineColour = 255;
-
-	if (colour == 10) {
+	/*if (colour == 10) {
 		lineColour = 0;
-	}
+	}*/
 
-	paintLines(painter, 3, Vector3(lineColour, lineColour, lineColour));
+	paintLines(painter, 3, lineColour);
 
 
 	/*if (arrows) {

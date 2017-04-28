@@ -2,7 +2,28 @@
 
 void RungeKuttaIntegrator::simulate() {
 
-	int currentX = 0;
+
+	std::list<Vector2> points;
+
+	for (int i = 0; i < 5; i++) {
+		for (int x = 0; x < 500; x++) {
+			points.push_back(Vector2(x, (x * 0.5 + (i * 10))));
+		}
+
+		lines.push_back(points);
+		points.clear();
+	}
+
+	for (int i = 0; i < 5; i++) {
+		for (int x = 0; x < 500; x++) {
+			points.push_back(Vector2(x, 500 - (x * 0.5 + (i * 10))));
+		}
+
+		lines.push_back(points);
+		points.clear();
+	}
+
+	/*int currentX = 0;
 	int currentY = 0;
 
 	float timePerStep = vectorField->steps() / steps;
@@ -59,6 +80,6 @@ void RungeKuttaIntegrator::simulate() {
 		if (points.size() > 0) {
 			lines.push_back(points);
 		}
-	}
+	}*/
 
 }

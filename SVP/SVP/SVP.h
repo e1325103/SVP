@@ -4,6 +4,7 @@
 #include "ui_SVP.h"
 #include "Integrator.h"
 #include "VectorField.h"
+#include "RungeKuttaIntegrator.h"
 
 class SVP : public QMainWindow
 {
@@ -11,10 +12,13 @@ class SVP : public QMainWindow
 
 public:
 	SVP(QWidget *parent = Q_NULLPTR);
+
+protected slots:
 	void buttonRedrawClicked();
 
 private:
 	Ui::SVPClass* ui;
+	Ui_SVPClass asdf;
 
 	Integrator* integrator;
 	VectorField* vectorField;

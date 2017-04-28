@@ -4,7 +4,7 @@
 #include <fstream>
 
 #include <iostream>
-#include <string>---------------------------------------------------------------------
+#include <string>
 
 VectorField::VectorField()
 {
