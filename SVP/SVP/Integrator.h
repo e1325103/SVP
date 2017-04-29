@@ -23,13 +23,15 @@ public:
 	VectorField* vectorField;
 	float minParameter;
 	float maxParameter;
+	std::list<std::list<Vector2>> lines;
+
 protected:
 	SeedGenerator* seedGenerator;
 	float delta;
 	int colour;
 	bool arrows;
 	int steps;
-	std::list<std::list<Vector2>> lines;
+	
 
 	//void paintBackgroundParameter(QPainter* painter, int parameter, Vector3 color1, Vector3 color2);
 	void paintLines(QPainter* painter, int width, Vector3 color);

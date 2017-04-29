@@ -23,7 +23,6 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QStatusBar>
-#include <QtWidgets/QTextEdit>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -37,41 +36,6 @@ public:
     QHBoxLayout *horizontalLayout_2;
     QHBoxLayout *horizontalLayout;
     QLabel *drawLabel;
-    QWidget *widget_2;
-    QVBoxLayout *verticalLayout_4;
-    QWidget *widget_11;
-    QVBoxLayout *verticalLayout_15;
-    QGroupBox *groupIntegration;
-    QVBoxLayout *verticalLayout_10;
-    QWidget *widget_3;
-    QVBoxLayout *verticalLayout_5;
-    QRadioButton *radioEuler;
-    QWidget *widget_8;
-    QHBoxLayout *horizontalLayout_3;
-    QRadioButton *radioRunge;
-    QWidget *widget_9;
-    QHBoxLayout *horizontalLayout_4;
-    QTextEdit *textSteps;
-    QWidget *widget_10;
-    QHBoxLayout *horizontalLayout_5;
-    QTextEdit *textDelta;
-    QWidget *widget_14;
-    QVBoxLayout *verticalLayout_12;
-    QGroupBox *groupEven;
-    QVBoxLayout *verticalLayout_14;
-    QWidget *widget_16;
-    QVBoxLayout *verticalLayout_13;
-    QRadioButton *radioRandom;
-    QWidget *widget_18;
-    QHBoxLayout *horizontalLayout_8;
-    QTextEdit *textNumberRandom;
-    QWidget *widget_17;
-    QHBoxLayout *horizontalLayout_7;
-    QRadioButton *radioEven;
-    QWidget *widget_19;
-    QHBoxLayout *horizontalLayout_9;
-    QTextEdit *textDistance;
-    QWidget *widget_15;
     QWidget *widget_4;
     QVBoxLayout *verticalLayout_6;
     QWidget *widget_13;
@@ -99,7 +63,7 @@ public:
     QVBoxLayout *verticalLayout_8;
     QWidget *widget_7;
     QVBoxLayout *verticalLayout_9;
-    QPushButton *buttonLic;
+    QPushButton *buttonVar;
     QWidget *widget_21;
     QWidget *widget_12;
     QVBoxLayout *verticalLayout_11;
@@ -127,194 +91,6 @@ public:
         drawLabel->setObjectName(QStringLiteral("drawLabel"));
 
         horizontalLayout->addWidget(drawLabel);
-
-        widget_2 = new QWidget(centralWidget);
-        widget_2->setObjectName(QStringLiteral("widget_2"));
-        widget_2->setMaximumSize(QSize(200, 16777215));
-        verticalLayout_4 = new QVBoxLayout(widget_2);
-        verticalLayout_4->setSpacing(6);
-        verticalLayout_4->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_4->setObjectName(QStringLiteral("verticalLayout_4"));
-        widget_11 = new QWidget(widget_2);
-        widget_11->setObjectName(QStringLiteral("widget_11"));
-        widget_11->setMaximumSize(QSize(16777215, 225));
-        verticalLayout_15 = new QVBoxLayout(widget_11);
-        verticalLayout_15->setSpacing(6);
-        verticalLayout_15->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_15->setObjectName(QStringLiteral("verticalLayout_15"));
-        groupIntegration = new QGroupBox(widget_11);
-        groupIntegration->setObjectName(QStringLiteral("groupIntegration"));
-        groupIntegration->setMaximumSize(QSize(16777215, 210));
-        groupIntegration->setCheckable(false);
-        groupIntegration->setChecked(false);
-        verticalLayout_10 = new QVBoxLayout(groupIntegration);
-        verticalLayout_10->setSpacing(6);
-        verticalLayout_10->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_10->setObjectName(QStringLiteral("verticalLayout_10"));
-        widget_3 = new QWidget(groupIntegration);
-        widget_3->setObjectName(QStringLiteral("widget_3"));
-        widget_3->setMaximumSize(QSize(16777215, 40));
-        verticalLayout_5 = new QVBoxLayout(widget_3);
-        verticalLayout_5->setSpacing(6);
-        verticalLayout_5->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_5->setObjectName(QStringLiteral("verticalLayout_5"));
-        radioEuler = new QRadioButton(widget_3);
-        radioEuler->setObjectName(QStringLiteral("radioEuler"));
-        radioEuler->setChecked(true);
-
-        verticalLayout_5->addWidget(radioEuler);
-
-
-        verticalLayout_10->addWidget(widget_3);
-
-        widget_8 = new QWidget(groupIntegration);
-        widget_8->setObjectName(QStringLiteral("widget_8"));
-        widget_8->setMaximumSize(QSize(16777215, 40));
-        horizontalLayout_3 = new QHBoxLayout(widget_8);
-        horizontalLayout_3->setSpacing(6);
-        horizontalLayout_3->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
-        radioRunge = new QRadioButton(widget_8);
-        radioRunge->setObjectName(QStringLiteral("radioRunge"));
-
-        horizontalLayout_3->addWidget(radioRunge);
-
-
-        verticalLayout_10->addWidget(widget_8);
-
-        widget_9 = new QWidget(groupIntegration);
-        widget_9->setObjectName(QStringLiteral("widget_9"));
-        widget_9->setMaximumSize(QSize(16777215, 42));
-        horizontalLayout_4 = new QHBoxLayout(widget_9);
-        horizontalLayout_4->setSpacing(6);
-        horizontalLayout_4->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
-        textSteps = new QTextEdit(widget_9);
-        textSteps->setObjectName(QStringLiteral("textSteps"));
-        textSteps->setMaximumSize(QSize(100, 30));
-        textSteps->setInputMethodHints(Qt::ImhDigitsOnly);
-
-        horizontalLayout_4->addWidget(textSteps);
-
-
-        verticalLayout_10->addWidget(widget_9);
-
-        widget_10 = new QWidget(groupIntegration);
-        widget_10->setObjectName(QStringLiteral("widget_10"));
-        widget_10->setMaximumSize(QSize(16777215, 42));
-        horizontalLayout_5 = new QHBoxLayout(widget_10);
-        horizontalLayout_5->setSpacing(6);
-        horizontalLayout_5->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_5->setObjectName(QStringLiteral("horizontalLayout_5"));
-        textDelta = new QTextEdit(widget_10);
-        textDelta->setObjectName(QStringLiteral("textDelta"));
-        textDelta->setMaximumSize(QSize(100, 30));
-
-        horizontalLayout_5->addWidget(textDelta);
-
-
-        verticalLayout_10->addWidget(widget_10);
-
-
-        verticalLayout_15->addWidget(groupIntegration);
-
-
-        verticalLayout_4->addWidget(widget_11);
-
-        widget_14 = new QWidget(widget_2);
-        widget_14->setObjectName(QStringLiteral("widget_14"));
-        widget_14->setMaximumSize(QSize(16777215, 250));
-        verticalLayout_12 = new QVBoxLayout(widget_14);
-        verticalLayout_12->setSpacing(6);
-        verticalLayout_12->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_12->setObjectName(QStringLiteral("verticalLayout_12"));
-        groupEven = new QGroupBox(widget_14);
-        groupEven->setObjectName(QStringLiteral("groupEven"));
-        groupEven->setMaximumSize(QSize(16777215, 16777215));
-        verticalLayout_14 = new QVBoxLayout(groupEven);
-        verticalLayout_14->setSpacing(6);
-        verticalLayout_14->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_14->setObjectName(QStringLiteral("verticalLayout_14"));
-        widget_16 = new QWidget(groupEven);
-        widget_16->setObjectName(QStringLiteral("widget_16"));
-        widget_16->setMaximumSize(QSize(16777215, 40));
-        verticalLayout_13 = new QVBoxLayout(widget_16);
-        verticalLayout_13->setSpacing(6);
-        verticalLayout_13->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_13->setObjectName(QStringLiteral("verticalLayout_13"));
-        radioRandom = new QRadioButton(widget_16);
-        radioRandom->setObjectName(QStringLiteral("radioRandom"));
-        radioRandom->setChecked(true);
-
-        verticalLayout_13->addWidget(radioRandom);
-
-
-        verticalLayout_14->addWidget(widget_16);
-
-        widget_18 = new QWidget(groupEven);
-        widget_18->setObjectName(QStringLiteral("widget_18"));
-        widget_18->setMaximumSize(QSize(16777215, 42));
-        horizontalLayout_8 = new QHBoxLayout(widget_18);
-        horizontalLayout_8->setSpacing(6);
-        horizontalLayout_8->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_8->setObjectName(QStringLiteral("horizontalLayout_8"));
-        textNumberRandom = new QTextEdit(widget_18);
-        textNumberRandom->setObjectName(QStringLiteral("textNumberRandom"));
-        textNumberRandom->setMaximumSize(QSize(100, 30));
-        textNumberRandom->setInputMethodHints(Qt::ImhDigitsOnly);
-
-        horizontalLayout_8->addWidget(textNumberRandom);
-
-
-        verticalLayout_14->addWidget(widget_18);
-
-        widget_17 = new QWidget(groupEven);
-        widget_17->setObjectName(QStringLiteral("widget_17"));
-        widget_17->setMaximumSize(QSize(16777215, 40));
-        horizontalLayout_7 = new QHBoxLayout(widget_17);
-        horizontalLayout_7->setSpacing(6);
-        horizontalLayout_7->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_7->setObjectName(QStringLiteral("horizontalLayout_7"));
-        radioEven = new QRadioButton(widget_17);
-        radioEven->setObjectName(QStringLiteral("radioEven"));
-        radioEven->setEnabled(true);
-
-        horizontalLayout_7->addWidget(radioEven);
-
-
-        verticalLayout_14->addWidget(widget_17);
-
-        widget_19 = new QWidget(groupEven);
-        widget_19->setObjectName(QStringLiteral("widget_19"));
-        widget_19->setMaximumSize(QSize(16777215, 42));
-        horizontalLayout_9 = new QHBoxLayout(widget_19);
-        horizontalLayout_9->setSpacing(6);
-        horizontalLayout_9->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_9->setObjectName(QStringLiteral("horizontalLayout_9"));
-        textDistance = new QTextEdit(widget_19);
-        textDistance->setObjectName(QStringLiteral("textDistance"));
-        textDistance->setEnabled(false);
-        textDistance->setMaximumSize(QSize(100, 30));
-        textDistance->setInputMethodHints(Qt::ImhDigitsOnly);
-
-        horizontalLayout_9->addWidget(textDistance);
-
-
-        verticalLayout_14->addWidget(widget_19);
-
-
-        verticalLayout_12->addWidget(groupEven);
-
-
-        verticalLayout_4->addWidget(widget_14);
-
-        widget_15 = new QWidget(widget_2);
-        widget_15->setObjectName(QStringLiteral("widget_15"));
-
-        verticalLayout_4->addWidget(widget_15);
-
-
-        horizontalLayout->addWidget(widget_2);
 
         widget_4 = new QWidget(centralWidget);
         widget_4->setObjectName(QStringLiteral("widget_4"));
@@ -566,10 +342,10 @@ public:
         verticalLayout_9->setSpacing(6);
         verticalLayout_9->setContentsMargins(11, 11, 11, 11);
         verticalLayout_9->setObjectName(QStringLiteral("verticalLayout_9"));
-        buttonLic = new QPushButton(widget_7);
-        buttonLic->setObjectName(QStringLiteral("buttonLic"));
+        buttonVar = new QPushButton(widget_7);
+        buttonVar->setObjectName(QStringLiteral("buttonVar"));
 
-        verticalLayout_9->addWidget(buttonLic);
+        verticalLayout_9->addWidget(buttonVar);
 
 
         verticalLayout_6->addWidget(widget_7);
@@ -620,7 +396,7 @@ public:
 
         retranslateUi(SVPClass);
 
-        buttonLic->setDefault(false);
+        buttonVar->setDefault(false);
 
 
         QMetaObject::connectSlotsByName(SVPClass);
@@ -630,39 +406,14 @@ public:
     {
         SVPClass->setWindowTitle(QApplication::translate("SVPClass", "SVP", Q_NULLPTR));
         drawLabel->setText(QString());
-        groupIntegration->setTitle(QApplication::translate("SVPClass", "Integration", Q_NULLPTR));
-        radioEuler->setText(QApplication::translate("SVPClass", "Euler Integration", Q_NULLPTR));
-        radioRunge->setText(QApplication::translate("SVPClass", "Runge Kutta", Q_NULLPTR));
-        textSteps->setHtml(QApplication::translate("SVPClass", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", Q_NULLPTR));
-        textSteps->setPlaceholderText(QApplication::translate("SVPClass", "Anzahl Schritte", Q_NULLPTR));
-        textDelta->setPlaceholderText(QApplication::translate("SVPClass", "Delta", Q_NULLPTR));
-        groupEven->setTitle(QApplication::translate("SVPClass", "Starpunktverteilung", Q_NULLPTR));
-        radioRandom->setText(QApplication::translate("SVPClass", "Zufallsgeneriert", Q_NULLPTR));
-        textNumberRandom->setHtml(QApplication::translate("SVPClass", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", Q_NULLPTR));
-        textNumberRandom->setPlaceholderText(QApplication::translate("SVPClass", "Anzahl Saatpunkte", Q_NULLPTR));
-        radioEven->setText(QApplication::translate("SVPClass", "Gleichm\303\244\303\237ig Verteilt", Q_NULLPTR));
-        textDistance->setHtml(QApplication::translate("SVPClass", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", Q_NULLPTR));
-        textDistance->setPlaceholderText(QApplication::translate("SVPClass", "Abstand", Q_NULLPTR));
         groupBoxColour->setTitle(QApplication::translate("SVPClass", "Farben", Q_NULLPTR));
         radioColourOne->setText(QApplication::translate("SVPClass", "Fabrkanal 1", Q_NULLPTR));
         radioColourTwo->setText(QApplication::translate("SVPClass", "Farbkanal 2", Q_NULLPTR));
         labelColourOne->setText(QApplication::translate("SVPClass", "Farbe 1", Q_NULLPTR));
         labelColourTwo->setText(QApplication::translate("SVPClass", "Farbe 2", Q_NULLPTR));
         checkArrows->setText(QApplication::translate("SVPClass", "Pfeile", Q_NULLPTR));
-        buttonLic->setText(QApplication::translate("SVPClass", "Linear Intergral Convolution", Q_NULLPTR));
-        buttonRedraw->setText(QApplication::translate("SVPClass", "Neu Zeichnen", Q_NULLPTR));
+        buttonVar->setText(QApplication::translate("SVPClass", "Plot Variability", Q_NULLPTR));
+        buttonRedraw->setText(QApplication::translate("SVPClass", "Draw Lines", Q_NULLPTR));
     } // retranslateUi
 
 };

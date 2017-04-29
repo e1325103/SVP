@@ -1,13 +1,13 @@
 numBasis = 2;
-A1 = repmat(1:10, 10,1);
-A1 = A1 .* repmat((0.1:0.1:1)', 1, 10);
-A2 = (repmat(10, 10, 10) - A1) * 2;
-B = repmat(1:10, 10,1);
-A1 = [A1, B];
-A2 = [A2, B];
-A = [A1; A2];
-A = A';
-subplot(2, 2, 1);
+% A1 = repmat(1:10, 10,1);
+% A1 = A1 .* repmat((0.1:0.1:1)', 1, 10);
+% A2 = (repmat(10, 10, 10) - A1) * 2;
+% B = repmat(1:10, 10,1);
+% A1 = [A1, B];
+% A2 = [A2, B];
+% A = [A1; A2];
+% A = A';
+% subplot(2, 2, 1);
 plot(A(11:20, :), A(1:10, :));
 
 meanVector = determineMeanVector(A);

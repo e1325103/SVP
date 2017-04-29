@@ -5,6 +5,9 @@
 #include "Integrator.h"
 #include "VectorField.h"
 #include "RungeKuttaIntegrator.h"
+#include "engine.h"
+#include "matrix.h"
+#include <string>
 
 class SVP : public QMainWindow
 {
@@ -15,6 +18,7 @@ public:
 
 protected slots:
 	void buttonRedrawClicked();
+	void buttonVarClicked();
 
 private:
 	Ui::SVPClass* ui;
