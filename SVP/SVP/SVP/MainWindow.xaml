@@ -1,0 +1,19 @@
+﻿<Window x:Class="SVP.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="100px" />
+        </Grid.ColumnDefinitions>
+        <Image Name="streamlineImage" Grid.Row="0" Grid.Column="0"></Image>
+        <StackPanel Grid.Row="0" Grid.Column="1">
+            <Button Name="buttonSimulate" Click="buttonSimulate_Click" Margin="6px">Simulate</Button>
+            <Button Name="buttonCluster" Click="buttonCluster_Click" Margin="6px">Cluster</Button>
+        </StackPanel>
+    </Grid>
+</Window>
