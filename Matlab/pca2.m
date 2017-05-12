@@ -44,19 +44,38 @@ plot(reconstructedA(11:20, (id == 2)), reconstructedA(1:10, (id == 2)), 'b');
 plot(reconstructedC(11:20, :), reconstructedC(1:10, :), 'black', 'linewidth', 2);
 hold off;
 
+threshold = sqrt(chi2inv(0.95,2));
 
 subplot(3, 2, 5);
 B = reducedA(:, id == 1);
 
-S_1 = mvnrnd(mean(B'),cov(B')*0.075,10000);
-scatter(S_1(1:100,1), S_1(1:100,2),'r*')
+x1 = linspace(min(B(:,1)) - 2,max(B(:,1)) + 2,500);
+x2 = linspace(min(B(:,2)) - 2,max(B(:,2)) + 2,500);
+[x1grid,x2grid] = meshgrid(x1,x2);
+X0 = [x1grid(:) x2grid(:)];
+mahalDist = mahal(X0, B');
+
+S_1 = X0(mahalDist <= threshold, :);
+
+scatter(S_1(:,1), S_1(:,2),'r*')
 hold on
 
 B = reducedA(:, id == 2);
 
-S_2 = mvnrnd(mean(B'),cov(B')*0.075, 10000);
+%S_2 = mvnrnd(mean(B'),cov(B')*0.075, 10000);
+
+
+x1 = linspace(min(B(:,1)) - 2,max(B(:,1)) + 2,500);
+x2 = linspace(min(B(:,2)) - 2,max(B(:,2)) + 2,500);
+[x1grid,x2grid] = meshgrid(x1,x2);
+X0 = [x1grid(:) x2grid(:)];
+mahalDist = mahal(X0, B');
+
+S_2 = X0(mahalDist <= threshold, :);
+
 d1 = mahal(S_2, B');
-scatter(S_2(1:100,1), S_2(1:100,2),'b*');
+
+scatter(S_2(:,1), S_2(:,2),'b*');
 
 hold off
 
