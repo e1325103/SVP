@@ -36,7 +36,7 @@ namespace SVP
         {
             MLApp.MLApp matlab = new MLApp.MLApp();
             matlab.Execute(@"cd D:\WindData\Visualisierung_2\Matlab");
-            matlab.Execute("pca");
+            matlab.Execute("pca2");
         }
     }
 }

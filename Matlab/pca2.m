@@ -1,6 +1,6 @@
 numBasis = 2;
 A1 = repmat(1:10, 10,1);
-A1 = A1 .* repmat((0.1:0.1:1)', 1, 10);
+A1 = A1 .* A1 .* repmat((0.1:0.1:1)', 1, 10);
 A2 = (repmat(10, 10, 10) - A1) * 2;
 B = repmat(1:10, 10,1);
 A1 = [A1, B];
@@ -34,7 +34,7 @@ if (numBasis > 1)
     plot(C(:,1),C(:,2),'kx', 'MarkerSize',15,'LineWidth',3);
     hold off;
 end
-mvnpdf(reducedA)
+
 reconstructedA = reconstructData(U, numBasis, reducedA, meanVector);
 reconstructedC = reconstructData(U, numBasis, C', meanVector);
 subplot(3, 2, 4);
@@ -48,27 +48,26 @@ hold off;
 subplot(3, 2, 5);
 B = reducedA(:, id == 1);
 
-X = mvnrnd(mean(B'),cov(B'),100);
-Y = B';
-d1 = mahal(X,Y);
-d1 = (d1 - min(d1)) / (max(d1) - min(d1));
+S_1 = mvnrnd(mean(B'),cov(B')*0.075,10000);
+scatter(S_1(1:100,1), S_1(1:100,2),'r*')
 hold on
-
-X = X(d1 < 0.1, :);
-d1 = d1(d1 < 0.1);
-scatter(X(:,1),X(:,2),size(X, 1),d1,'*','LineWidth',2)
 
 B = reducedA(:, id == 2);
 
-X = mvnrnd(mean(B'),cov(B'),10000);
-Y = B';
-d1 = mahal(X,Y);
-d1 = (d1 - min(d1)) / (max(d1) - min(d1));
-X = X(d1 < 0.1, :);
-d1 = d1(d1 < 0.1);
-scatter(X(:,1),X(:,2),size(X, 1),d1,'*','LineWidth',2);
+S_2 = mvnrnd(mean(B'),cov(B')*0.075, 10000);
+d1 = mahal(S_2, B');
+scatter(S_2(1:100,1), S_2(1:100,2),'b*');
 
 hold off
 
-reconstructedV = reconstructData(U, numBasis, X', meanVector);
-plot(reconstructedV(11:20, :), reconstructedV(1:10, :), 'b', 'linewidth', 2);
+
+subplot(3, 2, 6);
+reconstructedV_1 = reconstructData(U, numBasis, S_1', meanVector);
+plot(reconstructedV_1(11:20, :), reconstructedV_1(1:10, :), 'r', 'linewidth', 3);
+hold on;
+reconstructedV_2 = reconstructData(U, numBasis, S_2', meanVector);
+plot(reconstructedV_2(11:20, :), reconstructedV_2(1:10, :), 'b', 'linewidth', 3);
+plot(reconstructedC(11:20, :), reconstructedC(1:10, :), 'black', 'linewidth', 2);
+hold off;
+
+ylim([0 20])
