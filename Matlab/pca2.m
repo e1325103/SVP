@@ -1,6 +1,6 @@
 numBasis = 2;
 A1 = repmat(1:10, 10,1);
-A1 = A1 .* A1 .* repmat((0.1:0.1:1)', 1, 10);
+A1 = A1 .*  repmat((0.1:0.1:1)', 1, 10) .* rand(10, 10);
 A2 = (repmat(10, 10, 10) - A1) * 2;
 B = repmat(1:10, 10,1);
 A1 = [A1, B];
@@ -9,6 +9,8 @@ A = [A1; A2];
 A = A';
 subplot(3, 2, 1);
 plot(A(11:20, :), A(1:10, :));
+
+convInter = 0.95;
 
 meanVector = determineMeanVector(A);
 
@@ -44,13 +46,13 @@ plot(reconstructedA(11:20, (id == 2)), reconstructedA(1:10, (id == 2)), 'b');
 plot(reconstructedC(11:20, :), reconstructedC(1:10, :), 'black', 'linewidth', 2);
 hold off;
 
-threshold = sqrt(chi2inv(0.95,2));
+threshold = sqrt(chi2inv(convInter,2));
 
 subplot(3, 2, 5);
 B = reducedA(:, id == 1);
 
-x1 = linspace(min(B(:,1)) - 2,max(B(:,1)) + 2,500);
-x2 = linspace(min(B(:,2)) - 2,max(B(:,2)) + 2,500);
+x1 = linspace(min(B(:,1)) - 100,max(B(:,1)) + 100,1000);
+x2 = linspace(min(B(:,2)) - 100,max(B(:,2)) + 100,1000);
 [x1grid,x2grid] = meshgrid(x1,x2);
 X0 = [x1grid(:) x2grid(:)];
 mahalDist = mahal(X0, B');
@@ -65,8 +67,8 @@ B = reducedA(:, id == 2);
 %S_2 = mvnrnd(mean(B'),cov(B')*0.075, 10000);
 
 
-x1 = linspace(min(B(:,1)) - 2,max(B(:,1)) + 2,500);
-x2 = linspace(min(B(:,2)) - 2,max(B(:,2)) + 2,500);
+x1 = linspace(min(B(:,1)) - 100,max(B(:,1)) + 100,1000);
+x2 = linspace(min(B(:,2)) - 100,max(B(:,2)) + 100,1000);
 [x1grid,x2grid] = meshgrid(x1,x2);
 X0 = [x1grid(:) x2grid(:)];
 mahalDist = mahal(X0, B');
@@ -89,4 +91,4 @@ plot(reconstructedV_2(11:20, :), reconstructedV_2(1:10, :), 'b', 'linewidth', 3)
 plot(reconstructedC(11:20, :), reconstructedC(1:10, :), 'black', 'linewidth', 2);
 hold off;
 
-ylim([0 20])
+%ylim([0 20])
