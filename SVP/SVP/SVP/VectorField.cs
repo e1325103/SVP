@@ -278,5 +278,29 @@ namespace SVP
             int stride = 500 * PixelFormats.Bgr32.BitsPerPixel / 8;
             return BitmapSource.Create(500, 500, 96, 96, PixelFormats.Bgr32, null, backgroundImage, stride);*/
         }
+
+        public ImageSource createImage(double[,] centerLines)
+        {    
+            List<Line> lines = new List<Line>();
+
+            Line line;
+
+            for (int i = 0; i < centerLines.GetLength(0); i++)
+            {
+                Vec2 point;
+
+                line = new Line();
+
+                for (int j = 0; j < (centerLines.GetLength(1) / 2); j++)
+                {
+                    point = new Vec2((float)centerLines[i, j] - 1, (float)centerLines[i, (j + (centerLines.GetLength(1) / 2))] - 1);
+                    line.add(point);
+                }
+
+                lines.Add(line);
+            }
+
+            return createImage(lines);
+        }
     }
 }

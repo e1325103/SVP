@@ -115,6 +115,11 @@ namespace SVP
             matlab.Execute("streamlines = streamlines';");
             
             matlab.Execute("calculateVariabilityLines");
+            matlab.Execute("reconCenterLines = reconCenterLines'");
+
+            double[,] centerLines = matlab.GetVariable("reconCenterLines", "base");
+
+            streamlineImage.Source = vectorField.createImage(centerLines);            
         }
 
         private string getLineMatrix(Line line)
