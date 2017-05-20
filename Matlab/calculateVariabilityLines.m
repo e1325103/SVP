@@ -1,4 +1,4 @@
-% close all;
+close all;
 % A1 = repmat(1:10, 10,1);
 % A1 = A1 .*  repmat((0.1:0.1:1)', 1, 10) .* rand(10, 10);
 % A2 = (repmat(10, 10, 10) - A1) * 2;
@@ -6,8 +6,10 @@
 % A1 = [A1, B];
 % A2 = [A2, B];
 % A = [A1; A2];
-%streamlines = connections';
+
 %streamlines = A;
+%load('streamlines.mat');
+%streamlines = connections';
 
 highNumberSamples = 0;
 
@@ -36,7 +38,7 @@ if(exist('convInter', 'var')~=1)
 end
 
 sampleOffset = 2;
-numSamples = 20000000;
+numSamples = 2000000;
 
 meanVector = determineMeanVector(streamlines);
 
@@ -87,7 +89,7 @@ subplot(3, 2, 4);
 hold on;
 if ~highNumberSamples
     for i = 1:numClusters
-       plot(reconStreamlines(pXMin:pXMax, (lineIDs == i)), reconStreamlines(pYMin:pYMax, (lineIDs == i)),  colors(mod(i, 6)), 'LineWidth', 2^(i-1));
+       plot(reconStreamlines(pXMin:pXMax, (lineIDs == i)), reconStreamlines(pYMin:pYMax, (lineIDs == i)),  colors(mod(i, 6)), 'LineWidth', 2);
     end
 end
 plot(reconCenterLines(pXMin:pXMax, :), reconCenterLines(pYMin:pYMax, :), 'black', 'linewidth', 2);
@@ -122,7 +124,7 @@ for i = 1:numClusters
     
     samplesInside = samples(mahalDist <= threshold, :)';
     eval(strcat('sampleStreamlines', int2str(i), '=reconstructData(basis, numBasis, samplesInside, meanVector);'));
-    if highNumberSamples
+    if ~highNumberSamples
         samplesInside = samplesInside';
     end
     scatter(samplesInside(:, 1), samplesInside(:, 2), strcat(colors(mod(i, 6)), '*'));
