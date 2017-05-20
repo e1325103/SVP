@@ -9,11 +9,11 @@ namespace SVP
 {
     public class Line
     {
-        public ArrayList Points{get; set;}
+        public List<Vec2> Points{get; set;}
 
         public Line()
         {
-            Points = new ArrayList();
+            Points = new List<Vec2>();
         }
 
         public void add(Vec2 point)

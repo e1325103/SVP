@@ -95,31 +95,58 @@ namespace SVP
             current = "cd '" + current.Substring(0, current.IndexOf("SVP")) + "Matlab'";
             matlab.Execute(current);
 
-            matlab.Execute("A = " + getLineMatrix() + ";");
-            matlab.Execute("A = A';");
+            bool first = true;
 
-            matlab.Execute("pca2");
+            foreach (Line line in runge.lines)
+            {
+                string t = getLineMatrix(line);
+
+                if (first)
+                {
+                    matlab.Execute("streamlines = [" + getLineMatrix(line));
+                    first = false;
+                }
+                else
+                {
+                    matlab.Execute("streamlines = [streamlines; " + getLineMatrix(line));
+                }
+            }
+
+            matlab.Execute("streamlines = streamlines';");
+            
+            matlab.Execute("calculateVariabilityLines");
         }
 
-        private string getLineMatrix()
+        private string getLineMatrix(Line line)
         {
-            string returnString = "[";
+            int columns = int.Parse(textSteps.Text);
+
+            int i = 0;
+
+            string returnString = "";
 
             string xValues = "";
             string yValues = "";
 
-            foreach (Line line in runge.lines)
+            foreach (Vec2 point in line.Points)
             {
-                foreach (Vec2 point in line.Points)
-                {
-                    xValues += point.X + " ";
-                    yValues += point.Y + " ";
-                }
-
-                returnString += xValues + yValues + ";";
+                xValues += point.X + " ";
+                yValues += point.Y + " ";
+                i++;
             }
 
+            while (i < columns)
+            {
+                xValues += line.Points[line.Points.Count - 1].X + " ";
+                yValues += line.Points[line.Points.Count - 1].Y + " ";
+                i++;
+            }
+
+            returnString += xValues;
+            returnString += yValues;
             returnString += "]";
+
+            returnString = returnString.Replace(',', '.');
 
             return returnString;
         }

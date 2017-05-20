@@ -6,7 +6,7 @@
 % A1 = [A1, B];
 % A2 = [A2, B];
 % A = [A1; A2];
-streamlines = connections';
+%streamlines = connections';
 %streamlines = A;
 
 highNumberSamples = 0;
@@ -22,9 +22,19 @@ if ~highNumberSamples
 	plot(streamlines(pXMin:pXMax, :), streamlines(pYMin:pYMax, :));
 end
 colors = 'rbgycm';
-convInter = 0.9;
-numBasis = 4;
-numClusters = 5;
+
+if(exist('numClusters', 'var')~=1)
+    numClusters = 3;
+end
+
+if(exist('numBasis', 'var')~=1)
+    numBasis = 3;
+end
+
+if(exist('convInter', 'var')~=1)
+    convInter = 0.9;
+end
+
 sampleOffset = 2;
 numSamples = 20000000;
 

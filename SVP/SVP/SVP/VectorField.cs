@@ -108,7 +108,7 @@ namespace SVP
             return BitmapSource.Create(500, 500, 96, 96, PixelFormats.Bgr32, null, pixelData, stride);
         }
 
-        public BitmapSource createImage(ArrayList lines)
+        public BitmapSource createImage(List<Line> lines)
         {
             byte[] pixelData = new byte[1000 * 1000 * 4];
             int pixelCount = 0;

@@ -19,7 +19,7 @@ namespace SVP
 
         private Random random;
 
-        public ArrayList lines;
+        public List<Line> lines;
 
         private float timePerStep;
 
@@ -33,7 +33,7 @@ namespace SVP
             this.rectanglePos2 = rectanglePos2;
             this.field = field;
 
-            this.lines = new ArrayList();
+            this.lines = new List<Line>();
 
             this.random = new Random();
         }
@@ -48,7 +48,7 @@ namespace SVP
             this.rectanglePos2 = rectanglePos2;
             this.field = field;
 
-            this.lines = new ArrayList();
+            this.lines = new List<Line>();
 
             this.random = new Random();
 
