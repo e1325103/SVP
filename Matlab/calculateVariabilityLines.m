@@ -7,7 +7,7 @@ close all;
 % A2 = [A2, B];
 % A = [A1; A2];
 
-%streamlines = A;
+streamlines = A;
 %load('streamlines.mat');
 %streamlines = connections';
 
@@ -38,7 +38,7 @@ if(exist('convInter', 'var')~=1)
 end
 
 sampleOffset = 2;
-numSamples = 20000;
+numSamples = 40000;
 
 meanVector = determineMeanVector(streamlines);
 
@@ -120,14 +120,18 @@ for i = 1:numClusters
 %     eval(reshapeCommand);
     samples = rand(numBasis, numSamples) .* repmat((maxStreamlines - minStreamlines), 1, numSamples) + repmat(minStreamlines, 1, numSamples);
     samples = samples';
-    mahalDist = mahal(samples, gridStreamlines');
-    
-    samplesInside = samples(mahalDist <= threshold, :)';
-    eval(strcat('sampleStreamlines', int2str(i), '=reconstructData(basis, numBasis, samplesInside, meanVector);'));
-    if ~highNumberSamples
-        samplesInside = samplesInside';
+    if size(gridStreamlines, 2) > size(gridStreamlines, 1)
+        mahalDist = mahal(samples, gridStreamlines');
+
+        samplesInside = samples(mahalDist <= threshold, :)';
+        eval(strcat('sampleStreamlines', int2str(i), '=reconstructData(basis, numBasis, samplesInside, meanVector);'));
+        if ~highNumberSamples
+            samplesInside = samplesInside';
+        end
+        scatter(samplesInside(:, 1), samplesInside(:, 2), strcat(colors(mod(i, 6)), '*'));
+    else
+        eval(strcat('sampleStreamlines', int2str(i), '=reconstructData(basis, numBasis, median(gridStreamlines, 2), meanVector);'));
     end
-    scatter(samplesInside(:, 1), samplesInside(:, 2), strcat(colors(mod(i, 6)), '*'));
 end
 hold off;
 
