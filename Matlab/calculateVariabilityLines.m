@@ -7,7 +7,7 @@ close all;
 % A2 = [A2, B];
 % A = [A1; A2];
 
-streamlines = A;
+%streamlines = A;
 %load('streamlines.mat');
 %streamlines = connections';
 
