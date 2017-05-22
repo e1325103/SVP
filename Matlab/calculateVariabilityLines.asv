@@ -140,7 +140,7 @@ end
 for i = 1:numClusters
     %eval(strcat('plot(sampleStreamlines', int2str(i), '(pXMin:pXMax, :), sampleStreamlines', int2str(i), '(pYMin:pYMax, :), ''', colors(mod(i, 6)), ''', ''linewidth'', 3);'));
 
-    eval(strcat('sampleStreamlines', int2str(i), '=', 'sampleStreamlines', int2str(i), '''', ';'));
+    eval(strcat('sampleStreamlines', int2str(i), '''');
 end
 %plot(reconCenterLines(pXMin:pXMax, :), reconCenterLines(pYMin:pYMax, :), 'black', 'linewidth', 2);
 %hold off;

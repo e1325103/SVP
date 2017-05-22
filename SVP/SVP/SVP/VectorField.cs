@@ -135,6 +135,9 @@ namespace SVP
                     int x = (int)Math.Round(point.X * 2, 0);
                     int y = (int)Math.Round(point.Y * 2, 0);
 
+                    x = x - 1;
+                    y = y - 1;
+
                     int position = (x * 1000 + y) * 4;
 
                     pixelData[position] = 0;
@@ -293,7 +296,7 @@ namespace SVP
 
                 for (int j = 0; j < (centerLines.GetLength(1) / 2); j++)
                 {
-                    point = new Vec2((float)centerLines[i, j] - 1, (float)centerLines[i, (j + (centerLines.GetLength(1) / 2))] - 1);
+                    point = new Vec2((float)centerLines[i, j] /*- 1*/, (float)centerLines[i, (j + (centerLines.GetLength(1) / 2))] /*- 1*/);
                     line.add(point);
                 }
 
@@ -301,6 +304,74 @@ namespace SVP
             }
 
             return createImage(lines);
+        }
+
+        internal ImageSource drawCluster(double[,] clusterLines, int r, int g, int b, int a)
+        {
+            List<Line> lines = new List<Line>();
+
+            Line line;
+
+            for (int i = 0; i < clusterLines.GetLength(0); i++)
+            {
+                Vec2 point;
+
+                line = new Line();
+
+                for (int j = 0; j < (clusterLines.GetLength(1) / 2); j++)
+                {
+                    point = new Vec2((float)clusterLines[i, j] /*- 1*/, (float)clusterLines[i, (j + (clusterLines.GetLength(1) / 2))] /*- 1*/);
+                    line.add(point);
+                }
+
+                lines.Add(line);
+            }
+
+            byte[] pixelData = new byte[1000 * 1000 * 4];
+            int pixelCount = 0;
+
+            for (int x = 0; x < 1000; x++)
+            {
+                for (int y = 0; y < 1000; y++)
+                {
+                    pixelData[pixelCount] = (byte)255;
+                    pixelCount++;
+                    pixelData[pixelCount] = (byte)255;
+                    pixelCount++;
+                    pixelData[pixelCount] = (byte)255;
+                    pixelCount++;
+                    pixelData[pixelCount] = (byte)0;
+                    pixelCount++;
+                }
+            }
+
+            foreach (Line singleLine in lines)
+            {
+                foreach (Vec2 point in singleLine.Points)
+                {
+                    int x = (int)Math.Round(point.X * 2, 0);
+                    int y = (int)Math.Round(point.Y * 2, 0);
+
+                    if (x >= 1000) x = 999;
+                    if (y >= 1000) y = 999;
+                    if (x < 0) x = 0;
+                    if (y < 0) y = 0;
+
+                    int position = (x * 1000 + y) * 4;
+
+                    pixelData[position] = (byte)b;
+                    pixelData[position + 1] = (byte)g;
+                    pixelData[position + 2] = (byte)r;
+                    pixelData[position + 3] = (byte)a;
+                }
+            }
+
+            int stride = 1000 * PixelFormats.Bgra32.BitsPerPixel / 8;
+
+            return BitmapSource.Create(1000, 1000, 96, 96, PixelFormats.Bgra32, null, pixelData, stride);
+
+            //return BitmapSource.Create(1000, 1000, 96, 96, PixelFormats.Bgr32, null, pixelData, stride);
+
         }
     }
 }

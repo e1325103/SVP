@@ -28,9 +28,42 @@ namespace SVP
 
         RungeKutta runge;
 
+        Image[] clusterImages;
+
+        int[,] colours;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            clusterImages = new Image[5];
+            clusterImages[0] = clusterImage1;
+            clusterImages[1] = clusterImage2;
+            clusterImages[2] = clusterImage3;
+            clusterImages[3] = clusterImage4;
+            clusterImages[4] = clusterImage5;
+
+            colours = new int[5, 3];
+
+            colours[0, 0] = 255;
+            colours[0, 1] = 0;
+            colours[0, 2] = 0;
+
+            colours[1, 0] = 0;
+            colours[1, 1] = 255;
+            colours[1, 2] = 0;
+
+            colours[2, 0] = 0;
+            colours[2, 1] = 0;
+            colours[2, 2] = 255;
+
+            colours[3, 0] = 255;
+            colours[3, 1] = 255;
+            colours[3, 2] = 0;
+
+            colours[4, 0] = 0;
+            colours[4, 1] = 255;
+            colours[4, 2] = 255;
         }
 
         private void buttonSimulate_Click(object sender, RoutedEventArgs e)
@@ -91,6 +124,7 @@ namespace SVP
             MLApp.MLApp matlab = new MLApp.MLApp();
 
             string current = Directory.GetCurrentDirectory();
+            int numClusters = int.Parse(textClusters.Text);
 
             current = "cd '" + current.Substring(0, current.IndexOf("SVP")) + "Matlab'";
             matlab.Execute(current);
@@ -119,7 +153,14 @@ namespace SVP
 
             double[,] centerLines = matlab.GetVariable("reconCenterLines", "base");
 
-            streamlineImage.Source = vectorField.createImage(centerLines);            
+            streamlineImage.Source = vectorField.createImage(centerLines);
+
+            for (int i = 1; i <= numClusters; i++)
+            {
+                //matlab.Execute("sampleStreamlines" + i + " = sampleStreamlines" + i + "'");
+                double[,] clusterLines = matlab.GetVariable("sampleStreamlines" + i, "base");
+                clusterImages[i - 1].Source = vectorField.drawCluster(clusterLines, colours[i - 1, 0], colours[i - 1, 1], colours[i - 1, 2], 100);
+            }            
         }
 
         private string getLineMatrix(Line line)
