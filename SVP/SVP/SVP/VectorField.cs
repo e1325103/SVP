@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -14,6 +15,7 @@ namespace SVP
     {
 
         private byte[] backgroundImage;
+        private byte[] backgroundImageWithStreamlines;
 
         public int size = 500;
 
@@ -103,20 +105,20 @@ namespace SVP
 
         public BitmapSource createImage(List<Line> lines)
         {
-            byte[] pixelData = new byte[1000 * 1000 * 4];
+            backgroundImageWithStreamlines = new byte[1000 * 1000 * 4];
             int pixelCount = 0;
 
             for (int x = 0; x < 1000; x++)
             {
                 for (int y = 0; y < 1000; y++)
                 {
-                    pixelData[pixelCount] = backgroundImage[pixelCount];
+                    backgroundImageWithStreamlines[pixelCount] = backgroundImage[pixelCount];
                     pixelCount++;
-                    pixelData[pixelCount] = backgroundImage[pixelCount];
+                    backgroundImageWithStreamlines[pixelCount] = backgroundImage[pixelCount];
                     pixelCount++;
-                    pixelData[pixelCount] = backgroundImage[pixelCount];
+                    backgroundImageWithStreamlines[pixelCount] = backgroundImage[pixelCount];
                     pixelCount++;
-                    pixelData[pixelCount] = backgroundImage[pixelCount];
+                    backgroundImageWithStreamlines[pixelCount] = backgroundImage[pixelCount];
                     pixelCount++;
                 }
             }
@@ -133,15 +135,15 @@ namespace SVP
 
                     int position = (x * 1000 + y) * 4;
 
-                    pixelData[position] = 0;
-                    pixelData[position + 1] = (byte)0;
-                    pixelData[position + 2] = (byte)0;
-                    pixelData[position + 3] = (byte)255;
+                    backgroundImageWithStreamlines[position] = 0;
+                    backgroundImageWithStreamlines[position + 1] = (byte)0;
+                    backgroundImageWithStreamlines[position + 2] = (byte)0;
+                    backgroundImageWithStreamlines[position + 3] = (byte)255;
                 }
             }
 
             int stride = 1000 * PixelFormats.Bgr32.BitsPerPixel / 8;
-            return BitmapSource.Create(1000, 1000, 96, 96, PixelFormats.Bgr32, null, pixelData, stride);
+            return BitmapSource.Create(1000, 1000, 96, 96, PixelFormats.Bgr32, null, backgroundImageWithStreamlines, stride);
 
             /*byte[] pixelData = new byte[500 * 500 * 4];
             int pixelCount = 0;
@@ -299,7 +301,7 @@ namespace SVP
             return createImage(lines);
         }
 
-        internal ImageSource drawCluster(double[,] clusterLines, int r, int g, int b, int a)
+        internal ImageSource drawCluster(double[,] clusterLines, int r, int g, int b, int a/*, /*ref Image streamLineImage*/)
         {
             List<Line> lines = new List<Line>();
 
@@ -318,7 +320,8 @@ namespace SVP
                 }
 
                 lines.Add(line);
-            }
+            }          
+
 
             byte[] pixelData = new byte[1000 * 1000 * 4];
             int pixelCount = 0;
@@ -352,6 +355,14 @@ namespace SVP
 
                     int position = (x * 1000 + y) * 4;
 
+                    /*if (backgroundImageWithStreamlines[position] == 0)
+                    {
+                        backgroundImageWithStreamlines[position] = (byte)255;
+                        backgroundImageWithStreamlines[position + 1] = (byte)255;
+                        backgroundImageWithStreamlines[position + 2] = (byte)255;
+                        backgroundImageWithStreamlines[position + 3] = (byte)255;
+                    }*/
+
                     pixelData[position] = (byte)b;
                     pixelData[position + 1] = (byte)g;
                     pixelData[position + 2] = (byte)r;
@@ -360,6 +371,8 @@ namespace SVP
             }
 
             int stride = 1000 * PixelFormats.Bgra32.BitsPerPixel / 8;
+
+            //streamLineImage.Source = BitmapSource.Create(1000, 1000, 96, 96, PixelFormats.Bgr32, null, backgroundImageWithStreamlines, stride);
 
             return BitmapSource.Create(1000, 1000, 96, 96, PixelFormats.Bgra32, null, pixelData, stride);
 

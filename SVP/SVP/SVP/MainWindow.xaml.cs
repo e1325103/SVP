@@ -129,6 +129,8 @@ namespace SVP
             current = "cd '" + current.Substring(0, current.IndexOf("SVP")) + "Matlab'";
             matlab.Execute(current);
 
+            matlab.Execute("numClusters = " + numClusters + ";");
+
             bool first = true;
 
             foreach (Line line in runge.lines)
@@ -159,7 +161,7 @@ namespace SVP
             {
                 //matlab.Execute("sampleStreamlines" + i + " = sampleStreamlines" + i + "'");
                 double[,] clusterLines = matlab.GetVariable("sampleStreamlines" + i, "base");
-                clusterImages[i - 1].Source = vectorField.drawCluster(clusterLines, colours[i - 1, 0], colours[i - 1, 1], colours[i - 1, 2], 100);
+                clusterImages[i - 1].Source = vectorField.drawCluster(clusterLines, colours[i - 1, 0], colours[i - 1, 1], colours[i - 1, 2], 100/*, /*ref streamlineImage*/);
             }            
         }
 
@@ -227,7 +229,7 @@ namespace SVP
         private void buttonPreview_Click(object sender, RoutedEventArgs e)
         {
             vectorField = new VectorField();
-            vectorField.import("D:\\WindData");
+            vectorField.import("D:\\WindData\\Entpackt");
             streamlineImage.Source = vectorField.createImage();
 
             buttonSimulate.IsEnabled = true;

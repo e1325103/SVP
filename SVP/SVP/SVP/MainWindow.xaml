@@ -11,11 +11,11 @@
             <ColumnDefinition Width="270px" />
         </Grid.ColumnDefinitions>
         <Image Name="streamlineImage" Grid.Row="0" Grid.Column="0" MouseLeftButtonUp="streamlineImage_MouseLeftButtonUp" />
-        <Image Name="clusterImage1" Grid.Row="0" Grid.Column="0" Opacity="0.6"/>
-        <Image Name="clusterImage2" Grid.Row="0" Grid.Column="0" Opacity="0.6"/>
-        <Image Name="clusterImage3" Grid.Row="0" Grid.Column="0" Opacity="0.6"/>
-        <Image Name="clusterImage4" Grid.Row="0" Grid.Column="0" Opacity="0.6"/>
-        <Image Name="clusterImage5" Grid.Row="0" Grid.Column="0" Opacity="0.6"/>
+        <Image Name="clusterImage1" Grid.Row="0" Grid.Column="0" Opacity="0.9"/>
+        <Image Name="clusterImage2" Grid.Row="0" Grid.Column="0" Opacity="0.9"/>
+        <Image Name="clusterImage3" Grid.Row="0" Grid.Column="0" Opacity="0.9"/>
+        <Image Name="clusterImage4" Grid.Row="0" Grid.Column="0" Opacity="0.9"/>
+        <Image Name="clusterImage5" Grid.Row="0" Grid.Column="0" Opacity="0.9"/>
 
 
 

@@ -9,7 +9,7 @@
 
 %streamlines = A;
 %load('streamlines.mat');
-streamlines = connections';
+%streamlines = connections';
 
 highNumberSamples = 0;
 
@@ -136,14 +136,14 @@ end
 %hold off;
 
 %subplot(3, 2, 6);
-figure;
-hold on;
+%figure;
+%hold on;
 for i = 1:numClusters
-    eval(strcat('plot(sampleStreamlines', int2str(i), '(pYMin:pYMax, :), sampleStreamlines', int2str(i), '(pXMin:pXMax, :), ''', colors(mod(i-1, 6)+1), ''', ''linewidth'', 3);'));
+%    eval(strcat('plot(sampleStreamlines', int2str(i), '(pYMin:pYMax, :), sampleStreamlines', int2str(i), '(pXMin:pXMax, :), ''', colors(mod(i-1, 6)+1), ''', ''linewidth'', 3);'));
 
     eval(strcat('sampleStreamlines', int2str(i), '=', 'sampleStreamlines', int2str(i), '''', ';'));
     eval(strcat('countCluster', int2str(i), '=sum(lineIDs == ', int2str(i), ');'));
 end
 countClusterTotal = size(lineIDs, 1);
-plot(reconCenterLines(pYMin:pYMax, :), reconCenterLines(pXMin:pXMax, :), 'black', 'linewidth', 2);
+%plot(reconCenterLines(pYMin:pYMax, :), reconCenterLines(pXMin:pXMax, :), 'black', 'linewidth', 2);
 %hold off;
