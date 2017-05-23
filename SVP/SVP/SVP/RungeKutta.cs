@@ -198,7 +198,7 @@ namespace SVP
 
                                 if (currentTime > 47)
                                 {
-                                    currentTime = 47;
+                                    outside = true;
                                 }
 
                                 if (!isOutside(x, y))

@@ -12,8 +12,6 @@ namespace SVP
 {
     public class VectorField
     {
-        private float[, ,] u;
-        private float[, ,] v;
 
         private byte[] backgroundImage;
 
@@ -23,8 +21,6 @@ namespace SVP
 
         public bool import(string path)
         {
-            u = new float[500, 500, 48];
-            v = new float[500, 500, 48];
 
             field = new Vec2[500, 500, 48];
 
@@ -86,16 +82,13 @@ namespace SVP
             {
                 for (int y = 0; y < 500; y++)
                 {
-                    float value = u[x, y, 1];
-
-                    value = field[x, y, 1].X;
+                    float value = field[x, y, 1].X;
 
                     byte intensity = (byte)(value >= minValue && value <= maxValue ? ((float)value / (float)(maxValue - minValue) * 255.0f) : 0);
                     pixelData[pixelCount++] = intensity;
                     pixelData[pixelCount++] = intensity;
                     pixelData[pixelCount++] = intensity;
                     pixelData[pixelCount++] = (byte)255;
-                    value = v[x, y, 1];
 
                     value = field[x, y, 1].Y;
 

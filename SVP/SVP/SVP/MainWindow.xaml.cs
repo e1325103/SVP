@@ -227,7 +227,7 @@ namespace SVP
         private void buttonPreview_Click(object sender, RoutedEventArgs e)
         {
             vectorField = new VectorField();
-            vectorField.import("D:\\WindData\\Entpackt");
+            vectorField.import("D:\\WindData");
             streamlineImage.Source = vectorField.createImage();
 
             buttonSimulate.IsEnabled = true;
