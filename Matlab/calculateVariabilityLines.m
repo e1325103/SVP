@@ -38,7 +38,7 @@ if(exist('convInter', 'var')~=1)
 end
 
 sampleOffset = 2;
-numSamples = 100000;
+numSamples = 50000;
 
 meanVector = determineMeanVector(streamlines);
 

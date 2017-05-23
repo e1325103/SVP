@@ -130,8 +130,8 @@ namespace SVP
                     int x = (int)Math.Round(point.X * 2, 0);
                     int y = (int)Math.Round(point.Y * 2, 0);
 
-                    x = x - 1;
-                    y = y - 1;
+                    x = x - 2;
+                    y = y - 2;
 
                     int position = (x * 1000 + y) * 4;
 
@@ -301,7 +301,7 @@ namespace SVP
             return createImage(lines);
         }
 
-        internal ImageSource drawCluster(double[,] clusterLines, int r, int g, int b, int a/*, /*ref Image streamLineImage*/)
+        internal ImageSource drawCluster(double[,] clusterLines, int r, int g, int b, int a, ref Image streamLineImage)
         {
             List<Line> lines = new List<Line>();
 
@@ -355,13 +355,13 @@ namespace SVP
 
                     int position = (x * 1000 + y) * 4;
 
-                    /*if (backgroundImageWithStreamlines[position] == 0)
+                    if (backgroundImageWithStreamlines[position] != 0)
                     {
                         backgroundImageWithStreamlines[position] = (byte)255;
                         backgroundImageWithStreamlines[position + 1] = (byte)255;
                         backgroundImageWithStreamlines[position + 2] = (byte)255;
                         backgroundImageWithStreamlines[position + 3] = (byte)255;
-                    }*/
+                    }
 
                     pixelData[position] = (byte)b;
                     pixelData[position + 1] = (byte)g;
@@ -372,7 +372,7 @@ namespace SVP
 
             int stride = 1000 * PixelFormats.Bgra32.BitsPerPixel / 8;
 
-            //streamLineImage.Source = BitmapSource.Create(1000, 1000, 96, 96, PixelFormats.Bgr32, null, backgroundImageWithStreamlines, stride);
+            streamLineImage.Source = BitmapSource.Create(1000, 1000, 96, 96, PixelFormats.Bgr32, null, backgroundImageWithStreamlines, stride);
 
             return BitmapSource.Create(1000, 1000, 96, 96, PixelFormats.Bgra32, null, pixelData, stride);
 
