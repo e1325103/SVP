@@ -11,7 +11,7 @@
 %load('streamlines.mat');
 streamlines = connections';
 
-highNumberSamples = 1;
+highNumberSamples = 0;
 
 pYMin = 1;
 pYMax = (size(streamlines, 1) / 2);
@@ -142,6 +142,8 @@ for i = 1:numClusters
     eval(strcat('plot(sampleStreamlines', int2str(i), '(pYMin:pYMax, :), sampleStreamlines', int2str(i), '(pXMin:pXMax, :), ''', colors(mod(i-1, 6)+1), ''', ''linewidth'', 3);'));
 
     eval(strcat('sampleStreamlines', int2str(i), '=', 'sampleStreamlines', int2str(i), '''', ';'));
+    eval(strcat('countCluster', int2str(i), '=sum(lineIDs == ', int2str(i), ');'));
 end
+countClusterTotal = size(lineIDs, 1);
 plot(reconCenterLines(pYMin:pYMax, :), reconCenterLines(pXMin:pXMax, :), 'black', 'linewidth', 2);
 %hold off;
