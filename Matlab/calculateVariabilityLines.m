@@ -1,4 +1,4 @@
-close all;
+%close all;
 % A1 = repmat(1:10, 10,1);
 % A1 = A1 .*  repmat((0.1:0.1:1)', 1, 10) .* rand(10, 10);
 % A2 = (repmat(10, 10, 10) - A1) * 2;
@@ -9,9 +9,9 @@ close all;
 
 %streamlines = A;
 %load('streamlines.mat');
-%streamlines = connections';
+streamlines = connections';
 
-highNumberSamples = 0;
+highNumberSamples = 1;
 
 pYMin = 1;
 pYMax = (size(streamlines, 1) / 2);
@@ -38,7 +38,7 @@ if(exist('convInter', 'var')~=1)
 end
 
 sampleOffset = 2;
-numSamples = 40000;
+numSamples = 400000;
 
 meanVector = determineMeanVector(streamlines);
 
@@ -136,11 +136,12 @@ end
 %hold off;
 
 %subplot(3, 2, 6);
-%hold on;
+figure;
+hold on;
 for i = 1:numClusters
-    %eval(strcat('plot(sampleStreamlines', int2str(i), '(pXMin:pXMax, :), sampleStreamlines', int2str(i), '(pYMin:pYMax, :), ''', colors(mod(i, 6)), ''', ''linewidth'', 3);'));
+    eval(strcat('plot(sampleStreamlines', int2str(i), '(pYMin:pYMax, :), sampleStreamlines', int2str(i), '(pXMin:pXMax, :), ''', colors(mod(i-1, 6)+1), ''', ''linewidth'', 3);'));
 
     eval(strcat('sampleStreamlines', int2str(i), '=', 'sampleStreamlines', int2str(i), '''', ';'));
 end
-%plot(reconCenterLines(pXMin:pXMax, :), reconCenterLines(pYMin:pYMax, :), 'black', 'linewidth', 2);
+plot(reconCenterLines(pYMin:pYMax, :), reconCenterLines(pXMin:pXMax, :), 'black', 'linewidth', 2);
 %hold off;
