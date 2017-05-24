@@ -138,12 +138,13 @@ end
 %subplot(3, 2, 6);
 %figure;
 %hold on;
+percentCluster = zeros(numClusters, 1);
+countClusterTotal = size(lineIDs, 1);
 for i = 1:numClusters
 %    eval(strcat('plot(sampleStreamlines', int2str(i), '(pYMin:pYMax, :), sampleStreamlines', int2str(i), '(pXMin:pXMax, :), ''', colors(mod(i-1, 6)+1), ''', ''linewidth'', 3);'));
 
     eval(strcat('sampleStreamlines', int2str(i), '=', 'sampleStreamlines', int2str(i), '''', ';'));
-    eval(strcat('countCluster', int2str(i), '=sum(lineIDs == ', int2str(i), ');'));
+    eval(strcat('percentCluster(', int2str(i), ')=sum(lineIDs == ', int2str(i), ') / countClusterTotal;'));
 end
-countClusterTotal = size(lineIDs, 1);
 %plot(reconCenterLines(pYMin:pYMax, :), reconCenterLines(pXMin:pXMax, :), 'black', 'linewidth', 2);
 %hold off;
