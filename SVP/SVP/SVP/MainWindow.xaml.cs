@@ -30,7 +30,7 @@ namespace SVP
 
         Image[] clusterImages;
 
-        int[,] colours;
+        byte[,] colors;
 
         public MainWindow()
         {
@@ -43,27 +43,27 @@ namespace SVP
             clusterImages[3] = clusterImage4;
             clusterImages[4] = clusterImage5;
 
-            colours = new int[5, 3];
+            colors = new byte[5, 3];
 
-            colours[0, 0] = 255;
-            colours[0, 1] = 0;
-            colours[0, 2] = 0;
+            colors[0, 0] = 255;
+            colors[0, 1] = 0;
+            colors[0, 2] = 0;
 
-            colours[1, 0] = 0;
-            colours[1, 1] = 255;
-            colours[1, 2] = 0;
+            colors[1, 0] = 0;
+            colors[1, 1] = 255;
+            colors[1, 2] = 0;
 
-            colours[2, 0] = 0;
-            colours[2, 1] = 0;
-            colours[2, 2] = 255;
+            colors[2, 0] = 0;
+            colors[2, 1] = 0;
+            colors[2, 2] = 255;
 
-            colours[3, 0] = 255;
-            colours[3, 1] = 255;
-            colours[3, 2] = 0;
+            colors[3, 0] = 255;
+            colors[3, 1] = 255;
+            colors[3, 2] = 0;
 
-            colours[4, 0] = 0;
-            colours[4, 1] = 255;
-            colours[4, 2] = 255;
+            colors[4, 0] = 0;
+            colors[4, 1] = 255;
+            colors[4, 2] = 255;
         }
 
         private void buttonSimulate_Click(object sender, RoutedEventArgs e)
@@ -156,12 +156,24 @@ namespace SVP
             double[,] centerLines = matlab.GetVariable("reconCenterLines", "base");
 
             streamlineImage.Source = vectorField.createImage(centerLines);
+            double barPos = 0;
+            barCanvas.Children.Clear();
+            double countClusterTotal = matlab.GetVariable("countClusterTotal", "base");
 
             for (int i = 1; i <= numClusters; i++)
             {
                 //matlab.Execute("sampleStreamlines" + i + " = sampleStreamlines" + i + "'");
                 double[,] clusterLines = matlab.GetVariable("sampleStreamlines" + i, "base");
-                clusterImages[i - 1].Source = vectorField.drawCluster(clusterLines, colours[i - 1, 0], colours[i - 1, 1], colours[i - 1, 2], 100, ref streamlineImage);
+                double countCluster = matlab.GetVariable("countCluster" + i, "base");
+                double percent = countCluster / countClusterTotal;
+                Rectangle rect = new Rectangle();
+                rect.Width = barCanvas.ActualWidth;
+                rect.Height = barCanvas.ActualHeight * percent;
+                rect.Fill = new SolidColorBrush(Color.FromArgb(100, colors[i - 1, 0], colors[i - 1, 1], colors[i - 1, 2]));
+                barCanvas.Children.Add(rect);
+                Canvas.SetTop(rect, barPos * barCanvas.ActualHeight);
+                barPos += percent;
+                clusterImages[i - 1].Source = vectorField.drawCluster(clusterLines, colors[i - 1, 0], colors[i - 1, 1], colors[i - 1, 2], 100, ref streamlineImage);
             }            
         }
 
@@ -229,7 +241,7 @@ namespace SVP
         private void buttonPreview_Click(object sender, RoutedEventArgs e)
         {
             vectorField = new VectorField();
-            vectorField.import("D:\\WindData\\Entpackt");
+            vectorField.import("D:\\WindData");
             streamlineImage.Source = vectorField.createImage();
 
             buttonSimulate.IsEnabled = true;

@@ -130,8 +130,10 @@ namespace SVP
                     int x = (int)Math.Round(point.X * 2, 0);
                     int y = (int)Math.Round(point.Y * 2, 0);
 
-                    x = x - 2;
-                    y = y - 2;
+                    if (x >= 1000) x = 999;
+                    if (y >= 1000) y = 999;
+                    if (x < 0) x = 0;
+                    if (y < 0) y = 0;
 
                     int position = (x * 1000 + y) * 4;
 

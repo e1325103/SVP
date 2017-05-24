@@ -9,6 +9,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="40" />
             <ColumnDefinition Width="270px" />
         </Grid.ColumnDefinitions>
         <Image Name="streamlineImage" Grid.Row="0" Grid.Column="0" MouseLeftButtonUp="streamlineImage_MouseLeftButtonUp" />
@@ -18,9 +19,11 @@
         <Image Name="clusterImage4" Grid.Row="0" Grid.Column="0" Opacity="0.9"/>
         <Image Name="clusterImage5" Grid.Row="0" Grid.Column="0" Opacity="0.9"/>
 
+        <Canvas Name="barCanvas" Grid.Column="1">
 
+        </Canvas>
 
-        <StackPanel Grid.Column="1">
+        <StackPanel Grid.Column="2">
             <Button x:Name="buttonPreview" Click="buttonPreview_Click" Margin="6px" Content="Load"/>
             <Button x:Name="buttonSimulate" IsEnabled="False" Click="buttonSimulate_Click" Margin="6px" Content="Simulate"/>
             <Button x:Name="buttonCluster" IsEnabled="False" Click="buttonCluster_Click" Margin="6px" Content="Cluster"/>
@@ -33,7 +36,7 @@
 
             <StackPanel Orientation="Horizontal">
                 <Label Name="labelSeeds" Content="Number of Seeds: " Margin="6" Width="120" IsEnabled="False"></Label>
-                <TextBox Height="23" x:Name="textSeeds" Width="120" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="500"/>
+                <TextBox Height="23" x:Name="textSeeds" Width="120" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="100"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal">
