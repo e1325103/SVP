@@ -1,9 +1,9 @@
 ﻿<Window x:Class="SVP.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Streamline Variability Plots" Height="647" Width="858"
-        Icon="Logo.png">
-    <Grid>
+        Title="Streamline Variability Plots" Height="894" Width="1181"
+        Icon="Logo.png" ResizeMode="NoResize" Left="200px" Top="70px">
+    <Grid Name="rootGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -13,15 +13,23 @@
             <ColumnDefinition Width="270px" />
         </Grid.ColumnDefinitions>
         <Image Name="streamlineImage" Grid.Row="0" Grid.Column="0" MouseLeftButtonUp="streamlineImage_MouseLeftButtonUp" />
-        <Image Name="clusterImage1" Grid.Row="0" Grid.Column="0" Opacity="0.9"/>
-        <Image Name="clusterImage2" Grid.Row="0" Grid.Column="0" Opacity="0.9"/>
-        <Image Name="clusterImage3" Grid.Row="0" Grid.Column="0" Opacity="0.9"/>
-        <Image Name="clusterImage4" Grid.Row="0" Grid.Column="0" Opacity="0.9"/>
-        <Image Name="clusterImage5" Grid.Row="0" Grid.Column="0" Opacity="0.9"/>
 
-        <Canvas Name="barCanvas" Grid.Column="1">
+        <Canvas Name="lineCanvas" Grid.Row="0" Grid.Column="0" />
 
-        </Canvas>
+        <Canvas Name="clusterCanvas1" Grid.Row="0" Grid.Column="0" Opacity="0.4" ClipToBounds="True"/>
+        <Canvas Name="clusterCanvas2" Grid.Row="0" Grid.Column="0" Opacity="0.4" ClipToBounds="True"/>
+        <Canvas Name="clusterCanvas3" Grid.Row="0" Grid.Column="0" Opacity="0.4" ClipToBounds="True"/>
+        <Canvas Name="clusterCanvas4" Grid.Row="0" Grid.Column="0" Opacity="0.4" ClipToBounds="True"/>
+        <Canvas Name="clusterCanvas5" Grid.Row="0" Grid.Column="0" Opacity="0.4" ClipToBounds="True"/>
+
+        <Canvas Name="centerCanvas" Grid.Row="0" Grid.Column="0" Opacity="0.4" ClipToBounds="True"/>
+
+
+        <!--<Canvas Name="barCanvas" Grid.Column="1" />-->
+
+        <StackPanel Name="barPanel" Grid.Column="1" MaxWidth="6px">
+            
+        </StackPanel> 
 
         <StackPanel Grid.Column="2">
             <Button x:Name="buttonPreview" Click="buttonPreview_Click" Margin="6px" Content="Load"/>

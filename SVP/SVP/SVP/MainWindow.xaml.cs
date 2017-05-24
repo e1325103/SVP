@@ -28,7 +28,7 @@ namespace SVP
 
         RungeKutta runge;
 
-        Image[] clusterImages;
+        Canvas[] clusterCanvas;
 
         byte[,] colors;
 
@@ -36,12 +36,12 @@ namespace SVP
         {
             InitializeComponent();
 
-            clusterImages = new Image[5];
-            clusterImages[0] = clusterImage1;
-            clusterImages[1] = clusterImage2;
-            clusterImages[2] = clusterImage3;
-            clusterImages[3] = clusterImage4;
-            clusterImages[4] = clusterImage5;
+            clusterCanvas = new Canvas[5];
+            clusterCanvas[0] = clusterCanvas1;
+            clusterCanvas[1] = clusterCanvas2;
+            clusterCanvas[2] = clusterCanvas3;
+            clusterCanvas[3] = clusterCanvas4;
+            clusterCanvas[4] = clusterCanvas5;
 
             colors = new byte[5, 3];
 
@@ -68,6 +68,8 @@ namespace SVP
 
         private void buttonSimulate_Click(object sender, RoutedEventArgs e)
         {
+            lineCanvas.Children.Clear();
+
             if (radioStream.IsChecked.HasValue)
             {
                 if ((bool)radioStream.IsChecked)
@@ -84,7 +86,14 @@ namespace SVP
 
                         runge.generate();
 
-                        streamlineImage.Source = vectorField.createImage(runge.lines);
+                        streamlineImage.Source = vectorField.createImage();
+
+                        foreach (Polyline polLine in vectorField.drawLines(runge.lines, Colors.Black, 0.5))
+                        {
+                            lineCanvas.Children.Add(polLine);
+                            Canvas.SetTop(polLine, 0);
+                            Canvas.SetLeft(polLine, 0);
+                        }
 
                         buttonCluster.IsEnabled = true;
                     }
@@ -107,7 +116,12 @@ namespace SVP
 
                         runge.generatePathLines();
 
-                        streamlineImage.Source = vectorField.createImage(runge.lines);
+                        foreach (Polyline polLine in vectorField.drawLines(runge.lines, Colors.Black, 0.5))
+                        {
+                            lineCanvas.Children.Add(polLine);
+                            Canvas.SetTop(polLine, 0);
+                            Canvas.SetLeft(polLine, 0);
+                        }
 
                         buttonCluster.IsEnabled = true;
                     }
@@ -116,11 +130,13 @@ namespace SVP
                         MessageBox.Show("Please enter all parameters and click twice for the rectangle!");
                     }
                 }
-            }            
+            }
         }
 
         private void buttonCluster_Click(object sender, RoutedEventArgs e)
         {
+            lineCanvas.Children.Clear();
+
             MLApp.MLApp matlab = new MLApp.MLApp();
 
             string current = Directory.GetCurrentDirectory();
@@ -149,32 +165,56 @@ namespace SVP
             }
 
             matlab.Execute("streamlines = streamlines';");
-            
+
             matlab.Execute("calculateVariabilityLines");
             matlab.Execute("reconCenterLines = reconCenterLines'");
 
             double[,] centerLines = matlab.GetVariable("reconCenterLines", "base");
 
-            streamlineImage.Source = vectorField.createImage(centerLines);
+            double[,] percentCluster = matlab.GetVariable("percentCluster", "base");
+
+            //streamlineImage.Source = vectorField.createImage(centerLines, percentCluster);
+
             double barPos = 0;
-            barCanvas.Children.Clear();
+            barPanel.Children.Clear();
             double countClusterTotal = matlab.GetVariable("countClusterTotal", "base");
 
             for (int i = 1; i <= numClusters; i++)
             {
                 //matlab.Execute("sampleStreamlines" + i + " = sampleStreamlines" + i + "'");
                 double[,] clusterLines = matlab.GetVariable("sampleStreamlines" + i, "base");
-                double countCluster = matlab.GetVariable("countCluster" + i, "base");
-                double percent = countCluster / countClusterTotal;
+
+                double percent = percentCluster[i - 1, 0];
+
                 Rectangle rect = new Rectangle();
-                rect.Width = barCanvas.ActualWidth;
-                rect.Height = barCanvas.ActualHeight * percent;
+                rect.Width = barPanel.ActualWidth;
+                rect.Height = barPanel.ActualHeight * percent;
                 rect.Fill = new SolidColorBrush(Color.FromArgb(100, colors[i - 1, 0], colors[i - 1, 1], colors[i - 1, 2]));
-                barCanvas.Children.Add(rect);
-                Canvas.SetTop(rect, barPos * barCanvas.ActualHeight);
+                barPanel.Children.Add(rect);
+
                 barPos += percent;
-                clusterImages[i - 1].Source = vectorField.drawCluster(clusterLines, colors[i - 1, 0], colors[i - 1, 1], colors[i - 1, 2], 100, ref streamlineImage);
-            }            
+                
+                foreach (Polyline polLine in vectorField.drawCluster(
+                                                clusterLines, 
+                                                Color.FromArgb(
+                                                    100,
+                                                    colors[i - 1, 0], 
+                                                    colors[i - 1, 1], 
+                                                    colors[i - 1, 2]), 
+                                                4))
+                {
+                    clusterCanvas[i - 1].Children.Add(polLine);
+                    Canvas.SetTop(polLine, 0);
+                    Canvas.SetLeft(polLine, 0);
+                }
+            }
+
+            foreach (Polyline centerLine in vectorField.drawCenterLines(centerLines, percentCluster))
+            {
+                centerCanvas.Children.Add(centerLine);
+                Canvas.SetTop(centerLine, 0);
+                Canvas.SetLeft(centerLine, 0);
+            }
         }
 
         private string getLineMatrix(Line line)
@@ -217,11 +257,11 @@ namespace SVP
             if (first)
             {
                 //position = new Vec2((float)e.GetPosition(streamlineImage).X, (float)e.GetPosition(streamlineImage).Y);
-                position = new Vec2((float)e.GetPosition(streamlineImage).Y, (float)e.GetPosition(streamlineImage).X);          
+                position = new Vec2((float)e.GetPosition(streamlineImage).Y, (float)e.GetPosition(streamlineImage).X);
 
                 position = position / ((float)streamlineImage.ActualWidth);
                 position = position * 500;
-            
+
             }
             else
             {
@@ -240,8 +280,8 @@ namespace SVP
 
         private void buttonPreview_Click(object sender, RoutedEventArgs e)
         {
-            vectorField = new VectorField();
-            vectorField.import("D:\\WindData");
+            vectorField = new VectorField(lineCanvas.ActualWidth);
+            vectorField.import("D:\\WindData\\Entpackt");
             streamlineImage.Source = vectorField.createImage();
 
             buttonSimulate.IsEnabled = true;
@@ -286,6 +326,6 @@ namespace SVP
                     }
                 }
             }
-        }        
+        }
     }
 }

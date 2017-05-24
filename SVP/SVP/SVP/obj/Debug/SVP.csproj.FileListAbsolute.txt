@@ -1,3 +1,18 @@
 D:\WindData\Visualisierung_2\SVP\SVP\SVP\bin\Debug\SVP.exe.config
 D:\WindData\Visualisierung_2\SVP\SVP\SVP\obj\Debug\Interop.MLApp.dll
 D:\WindData\Visualisierung_2\SVP\SVP\SVP\obj\Debug\SVP.csproj.ResolveComReference.cache
+D:\TU\Master\Semester 1\Visualisierung 2\Neu\Visualisierung_2\SVP\SVP\SVP\bin\Debug\SVP.exe.config
+D:\TU\Master\Semester 1\Visualisierung 2\Neu\Visualisierung_2\SVP\SVP\SVP\obj\Debug\Interop.MLApp.dll
+D:\TU\Master\Semester 1\Visualisierung 2\Neu\Visualisierung_2\SVP\SVP\SVP\obj\Debug\SVP.csproj.ResolveComReference.cache
+D:\TU\Master\Semester 1\Visualisierung 2\Neu\Visualisierung_2\SVP\SVP\SVP\obj\Debug\SVP.exe
+D:\TU\Master\Semester 1\Visualisierung 2\Neu\Visualisierung_2\SVP\SVP\SVP\obj\Debug\SVP.pdb
+D:\TU\Master\Semester 1\Visualisierung 2\Neu\Visualisierung_2\SVP\SVP\SVP\bin\Debug\SVP.exe
+D:\TU\Master\Semester 1\Visualisierung 2\Neu\Visualisierung_2\SVP\SVP\SVP\bin\Debug\SVP.pdb
+D:\TU\Master\Semester 1\Visualisierung 2\Neu\Visualisierung_2\SVP\SVP\SVP\obj\Debug\SVP.csprojResolveAssemblyReference.cache
+D:\TU\Master\Semester 1\Visualisierung 2\Neu\Visualisierung_2\SVP\SVP\SVP\obj\Debug\MainWindow.baml
+D:\TU\Master\Semester 1\Visualisierung 2\Neu\Visualisierung_2\SVP\SVP\SVP\obj\Debug\MainWindow.g.cs
+D:\TU\Master\Semester 1\Visualisierung 2\Neu\Visualisierung_2\SVP\SVP\SVP\obj\Debug\App.g.cs
+D:\TU\Master\Semester 1\Visualisierung 2\Neu\Visualisierung_2\SVP\SVP\SVP\obj\Debug\SVP_MarkupCompile.cache
+D:\TU\Master\Semester 1\Visualisierung 2\Neu\Visualisierung_2\SVP\SVP\SVP\obj\Debug\SVP.g.resources
+D:\TU\Master\Semester 1\Visualisierung 2\Neu\Visualisierung_2\SVP\SVP\SVP\obj\Debug\SVP.Properties.Resources.resources
+D:\TU\Master\Semester 1\Visualisierung 2\Neu\Visualisierung_2\SVP\SVP\SVP\obj\Debug\SVP.csproj.GenerateResource.Cache

@@ -1,3 +1,4 @@
+
 %close all;
 % A1 = repmat(1:10, 10,1);
 % A1 = A1 .*  repmat((0.1:0.1:1)', 1, 10) .* rand(10, 10);
@@ -38,7 +39,7 @@ if(exist('convInter', 'var')~=1)
 end
 
 sampleOffset = 2;
-numSamples = 50000;
+numSamples = 25000;
 
 meanVector = determineMeanVector(streamlines);
 

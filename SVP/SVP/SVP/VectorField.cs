@@ -5,21 +5,28 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace SVP
 {
     public class VectorField
     {
-
         private byte[] backgroundImage;
-        private byte[] backgroundImageWithStreamlines;
 
-        public int size = 500;
+        public int fieldSize = 500;        
+
+        private double transform;
 
         private Vec2[, ,] field;
+
+        public VectorField(double width)
+        {
+            transform = (width / (fieldSize * 2));
+        }
 
         public bool import(string path)
         {
@@ -103,86 +110,39 @@ namespace SVP
             return BitmapSource.Create(500, 500, 96, 96, PixelFormats.Bgr32, null, pixelData, stride);
         }
 
-        public BitmapSource createImage(List<Line> lines)
-        {
-            backgroundImageWithStreamlines = new byte[1000 * 1000 * 4];
-            int pixelCount = 0;
-
-            for (int x = 0; x < 1000; x++)
-            {
-                for (int y = 0; y < 1000; y++)
-                {
-                    backgroundImageWithStreamlines[pixelCount] = backgroundImage[pixelCount];
-                    pixelCount++;
-                    backgroundImageWithStreamlines[pixelCount] = backgroundImage[pixelCount];
-                    pixelCount++;
-                    backgroundImageWithStreamlines[pixelCount] = backgroundImage[pixelCount];
-                    pixelCount++;
-                    backgroundImageWithStreamlines[pixelCount] = backgroundImage[pixelCount];
-                    pixelCount++;
-                }
-            }
+        public List<Polyline> drawLines(List<Line> lines, Color color, double stroke)
+        { 
+            List<Polyline> polLines = new List<Polyline>();
 
             foreach (Line line in lines)
             {
+                Polyline polLine = new Polyline();
+                polLine.Stroke = new SolidColorBrush(color);
+                polLine.StrokeThickness = stroke;
+
+                PointCollection pointCol = new PointCollection();
+
                 foreach (Vec2 point in line.Points)
                 {
-                    int x = (int)Math.Round(point.X * 2, 0);
-                    int y = (int)Math.Round(point.Y * 2, 0);
+                    double x = (point.X - 1) * 2;
+                    double y = (point.Y - 1) * 2;
 
-                    if (x >= 1000) x = 999;
+                    /*if (x >= 1000) x = 999;
                     if (y >= 1000) y = 999;
                     if (x < 0) x = 0;
-                    if (y < 0) y = 0;
+                    if (y < 0) y = 0;*/
 
-                    int position = (x * 1000 + y) * 4;
-
-                    backgroundImageWithStreamlines[position] = 0;
-                    backgroundImageWithStreamlines[position + 1] = (byte)0;
-                    backgroundImageWithStreamlines[position + 2] = (byte)0;
-                    backgroundImageWithStreamlines[position + 3] = (byte)255;
+                    if (x < 1000 && y < 1000 && x >= 0 && y >= 0)
+                    {
+                        pointCol.Add(new Point((int)Math.Round(y * transform, 0), (int)Math.Round(x * transform, 0)));
+                    }
                 }
+
+                polLine.Points = pointCol;
+                polLines.Add(polLine);
             }
 
-            int stride = 1000 * PixelFormats.Bgr32.BitsPerPixel / 8;
-            return BitmapSource.Create(1000, 1000, 96, 96, PixelFormats.Bgr32, null, backgroundImageWithStreamlines, stride);
-
-            /*byte[] pixelData = new byte[500 * 500 * 4];
-            int pixelCount = 0;
-
-            for (int x = 0; x < 500; x++)
-            {
-                for (int y = 0; y < 500; y++)
-                {
-                    pixelData[pixelCount] = backgroundImage[pixelCount];
-                    pixelCount++;
-                    pixelData[pixelCount] = backgroundImage[pixelCount];
-                    pixelCount++;
-                    pixelData[pixelCount] = backgroundImage[pixelCount];
-                    pixelCount++;
-                    pixelData[pixelCount] = backgroundImage[pixelCount];
-                    pixelCount++;
-                }
-            }
-
-            foreach (Line line in lines)
-            {
-                foreach (Vec2 point in line.Points)
-                {
-                    int x = (int)Math.Round(point.X, 0);
-                    int y = (int)Math.Round(point.Y, 0);
-                    
-                    int position =  (x * 500 + y) * 4;
-
-                    pixelData[position] = 0;
-                    pixelData[position + 1] = (byte)0;
-                    pixelData[position + 2] = (byte)0;
-                    pixelData[position + 3] = (byte)255;
-                }
-            }
-
-            int stride = 500 * PixelFormats.Bgr32.BitsPerPixel / 8;
-            return BitmapSource.Create(500, 500, 96, 96, PixelFormats.Bgr32, null, pixelData, stride);*/
+            return polLines;
         }
 
         public Vec2 interpolateTrilinear(float x, float y, float t)
@@ -216,7 +176,7 @@ namespace SVP
             return v5 * (1.0f - deltaX) + v6 * deltaX;
         }
 
-        internal ImageSource createImage()
+        public ImageSource createImage()
         {
             backgroundImage = new byte[1000 * 1000 * 4];
             int pixelCount = 0;
@@ -247,41 +207,12 @@ namespace SVP
 
             int stride = 1000 * PixelFormats.Bgr32.BitsPerPixel / 8;
             return BitmapSource.Create(1000, 1000, 96, 96, PixelFormats.Bgr32, null, backgroundImage, stride);
-
-            /*backgroundImage = new byte[500 * 500 * 4];
-            int pixelCount = 0;
-
-            for (int x = 0; x < 500; x++)
-            {
-                for (int y = 0; y < 500; y++)
-                {
-                    Vec2 v = field[x, y, 0];
-
-                    byte intensityR = (byte)202;
-                    byte intensityG = (byte)226;
-                    byte intensityB = (byte)197;
-
-                    if (v.X != 0 || v.Y != 0)
-                    {
-                        intensityR = (byte)163;
-                        intensityG = (byte)204;
-                        intensityB = (byte)255;
-                    }
-
-                    backgroundImage[pixelCount++] = intensityB;
-                    backgroundImage[pixelCount++] = intensityG;
-                    backgroundImage[pixelCount++] = intensityR;
-                    backgroundImage[pixelCount++] = (byte)255;
-                }
-            }
-
-            int stride = 500 * PixelFormats.Bgr32.BitsPerPixel / 8;
-            return BitmapSource.Create(500, 500, 96, 96, PixelFormats.Bgr32, null, backgroundImage, stride);*/
         }
 
-        public ImageSource createImage(double[,] centerLines)
+        public List<Polyline> drawCenterLines(double[,] centerLines, double[,] percentages)
         {
             List<Line> lines = new List<Line>();
+            List<Polyline> polLines = new List<Polyline>();
 
             Line line;
 
@@ -293,17 +224,21 @@ namespace SVP
 
                 for (int j = 0; j < (centerLines.GetLength(1) / 2); j++)
                 {
-                    point = new Vec2((float)centerLines[i, j] /*- 1*/, (float)centerLines[i, (j + (centerLines.GetLength(1) / 2))] /*- 1*/);
+                    point = new Vec2((float)centerLines[i, j] /*- 1*/, (float)centerLines[i, (j + (centerLines.GetLength(1) / 2))] /*- 1*/);  
                     line.add(point);
                 }
 
                 lines.Add(line);
+
+                polLines.Add(drawLines(lines, Colors.Black, 10 * percentages[i, 0])[0]);
+
+                lines.Clear();
             }
 
-            return createImage(lines);
+            return polLines;
         }
 
-        internal ImageSource drawCluster(double[,] clusterLines, int r, int g, int b, int a, ref Image streamLineImage)
+        public List<Polyline> drawCluster(double[,] clusterLines, Color color, double stroke)
         {
             List<Line> lines = new List<Line>();
 
@@ -324,62 +259,7 @@ namespace SVP
                 lines.Add(line);
             }
 
-
-            byte[] pixelData = new byte[1000 * 1000 * 4];
-            int pixelCount = 0;
-
-            for (int x = 0; x < 1000; x++)
-            {
-                for (int y = 0; y < 1000; y++)
-                {
-                    pixelData[pixelCount] = (byte)255;
-                    pixelCount++;
-                    pixelData[pixelCount] = (byte)255;
-                    pixelCount++;
-                    pixelData[pixelCount] = (byte)255;
-                    pixelCount++;
-                    pixelData[pixelCount] = (byte)0;
-                    pixelCount++;
-                }
-            }
-
-            foreach (Line singleLine in lines)
-            {
-                foreach (Vec2 point in singleLine.Points)
-                {
-                    int x = (int)Math.Round(point.X * 2, 0);
-                    int y = (int)Math.Round(point.Y * 2, 0);
-
-                    if (x >= 1000) x = 999;
-                    if (y >= 1000) y = 999;
-                    if (x < 0) x = 0;
-                    if (y < 0) y = 0;
-
-                    int position = (x * 1000 + y) * 4;
-
-                    if (backgroundImageWithStreamlines[position] != 0)
-                    {
-                        backgroundImageWithStreamlines[position] = (byte)255;
-                        backgroundImageWithStreamlines[position + 1] = (byte)255;
-                        backgroundImageWithStreamlines[position + 2] = (byte)255;
-                        backgroundImageWithStreamlines[position + 3] = (byte)255;
-                    }
-
-                    pixelData[position] = (byte)b;
-                    pixelData[position + 1] = (byte)g;
-                    pixelData[position + 2] = (byte)r;
-                    pixelData[position + 3] = (byte)a;
-                }
-            }
-
-            int stride = 1000 * PixelFormats.Bgra32.BitsPerPixel / 8;
-
-            streamLineImage.Source = BitmapSource.Create(1000, 1000, 96, 96, PixelFormats.Bgr32, null, backgroundImageWithStreamlines, stride);
-
-            return BitmapSource.Create(1000, 1000, 96, 96, PixelFormats.Bgra32, null, pixelData, stride);
-
-            //return BitmapSource.Create(1000, 1000, 96, 96, PixelFormats.Bgr32, null, pixelData, stride);
-
+            return drawLines(lines, color, stroke);         
         }
     }
 }

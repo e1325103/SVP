@@ -134,7 +134,7 @@ namespace SVP
                 return true;
             }
 
-            if (x >= (field.size - 2) || y >= (field.size - 2))
+            if (x >= (field.fieldSize - 2) || y >= (field.fieldSize - 2))
             {
                 return true;
             }
