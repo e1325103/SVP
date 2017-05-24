@@ -131,7 +131,7 @@ for i = 1:numClusters
         end
         %scatter(samplesInside(:, 1), samplesInside(:, 2), strcat(colors(mod(i, 6)), '*'));
     else
-        eval(strcat('sampleStreamlines', int2str(i), '=reconstructData(basis, numBasis, median(gridStreamlines, 2), meanVector);'));
+        eval(strcat('sampleStreamlines', int2str(i), '=reconCenterLines(:,',int2str(i),');'));
     end
 end
 %hold off;
@@ -139,6 +139,7 @@ end
 %subplot(3, 2, 6);
 %figure;
 %hold on;
+reconCenterLines = reconCenterLines';
 percentCluster = zeros(numClusters, 1);
 countClusterTotal = size(lineIDs, 1);
 for i = 1:numClusters
