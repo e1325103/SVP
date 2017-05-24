@@ -183,7 +183,7 @@ namespace SVP
 
             int stride = 500 * PixelFormats.Bgr32.BitsPerPixel / 8;
             return BitmapSource.Create(500, 500, 96, 96, PixelFormats.Bgr32, null, pixelData, stride);*/
-        } 
+        }
 
         public Vec2 interpolateTrilinear(float x, float y, float t)
         {
@@ -213,7 +213,7 @@ namespace SVP
             Vec2 v5 = v1 * (1.0f - deltaT) + v3 * deltaT;
             Vec2 v6 = v2 * (1.0f - deltaT) + v4 * deltaT;
 
-            return v5 * (1.0f - deltaX) + v6 * deltaX;           
+            return v5 * (1.0f - deltaX) + v6 * deltaX;
         }
 
         internal ImageSource createImage()
@@ -280,7 +280,7 @@ namespace SVP
         }
 
         public ImageSource createImage(double[,] centerLines)
-        {    
+        {
             List<Line> lines = new List<Line>();
 
             Line line;
@@ -322,7 +322,7 @@ namespace SVP
                 }
 
                 lines.Add(line);
-            }          
+            }
 
 
             byte[] pixelData = new byte[1000 * 1000 * 4];

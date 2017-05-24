@@ -1,15 +1,3 @@
 D:\WindData\Visualisierung_2\SVP\SVP\SVP\bin\Debug\SVP.exe.config
 D:\WindData\Visualisierung_2\SVP\SVP\SVP\obj\Debug\Interop.MLApp.dll
 D:\WindData\Visualisierung_2\SVP\SVP\SVP\obj\Debug\SVP.csproj.ResolveComReference.cache
-D:\WindData\Visualisierung_2\SVP\SVP\SVP\bin\Debug\SVP.exe
-D:\WindData\Visualisierung_2\SVP\SVP\SVP\bin\Debug\SVP.pdb
-D:\WindData\Visualisierung_2\SVP\SVP\SVP\obj\Debug\SVP.csprojResolveAssemblyReference.cache
-D:\WindData\Visualisierung_2\SVP\SVP\SVP\obj\Debug\MainWindow.baml
-D:\WindData\Visualisierung_2\SVP\SVP\SVP\obj\Debug\MainWindow.g.cs
-D:\WindData\Visualisierung_2\SVP\SVP\SVP\obj\Debug\App.g.cs
-D:\WindData\Visualisierung_2\SVP\SVP\SVP\obj\Debug\SVP_MarkupCompile.cache
-D:\WindData\Visualisierung_2\SVP\SVP\SVP\obj\Debug\SVP.g.resources
-D:\WindData\Visualisierung_2\SVP\SVP\SVP\obj\Debug\SVP.Properties.Resources.resources
-D:\WindData\Visualisierung_2\SVP\SVP\SVP\obj\Debug\SVP.csproj.GenerateResource.Cache
-D:\WindData\Visualisierung_2\SVP\SVP\SVP\obj\Debug\SVP.exe
-D:\WindData\Visualisierung_2\SVP\SVP\SVP\obj\Debug\SVP.pdb
