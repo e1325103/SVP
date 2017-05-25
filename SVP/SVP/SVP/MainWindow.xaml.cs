@@ -25,12 +25,20 @@ namespace SVP
         Vec2 position;
         Vec2 position2;
         VectorField vectorField;
+        Travel travel;
 
         RungeKutta runge;
 
         Canvas[] clusterCanvas;
 
+        MLApp.MLApp matlab;
+
         byte[,] colors;
+
+        int numSeeds;
+        int numSteps;
+        float delta;
+        float time;
 
         public MainWindow()
         {
@@ -64,6 +72,16 @@ namespace SVP
             colors[4, 0] = 0;
             colors[4, 1] = 255;
             colors[4, 2] = 255;
+
+
+            matlab = new MLApp.MLApp();
+            string current = Directory.GetCurrentDirectory();
+
+            current = "cd '" + current.Substring(0, current.IndexOf("SVP")) + "Matlab'";
+            matlab.Execute(current);
+
+            vectorField = new VectorField(lineCanvas.ActualWidth);
+            travel = new Travel();
         }
 
         private void buttonSimulate_Click(object sender, RoutedEventArgs e)
@@ -78,9 +96,9 @@ namespace SVP
                     if (textSeeds.Text.Trim() != "" && textSteps.Text.Trim() != "" && textDelta.Text.Trim() != "" && position != null && position2 != null)
                     {
 
-                        int numSeeds = int.Parse(textSeeds.Text);
-                        int numSteps = int.Parse(textSteps.Text);
-                        float delta = float.Parse(textDelta.Text);
+                        numSeeds = int.Parse(textSeeds.Text);
+                        numSteps = int.Parse(textSteps.Text);
+                        delta = float.Parse(textDelta.Text);
 
                         runge = new RungeKutta(numSeeds, numSteps, delta, position, position2, vectorField);
 
@@ -107,10 +125,10 @@ namespace SVP
                     if (textSeeds.Text.Trim() != "" && textSteps.Text.Trim() != "" && textDelta.Text.Trim() != "" && textTime.Text.Trim() != "" && position != null && position2 != null)
                     {
 
-                        int numSeeds = int.Parse(textSeeds.Text);
-                        int numSteps = int.Parse(textSteps.Text);
-                        float delta = float.Parse(textDelta.Text);
-                        float time = float.Parse(textTime.Text);
+                        numSeeds = int.Parse(textSeeds.Text);
+                        numSteps = int.Parse(textSteps.Text);
+                        delta = float.Parse(textDelta.Text);
+                        time = float.Parse(textTime.Text);
 
                         runge = new RungeKutta(numSeeds, numSteps, delta, position, position2, vectorField, time);
 
@@ -137,13 +155,9 @@ namespace SVP
         {
             lineCanvas.Children.Clear();
 
-            MLApp.MLApp matlab = new MLApp.MLApp();
-
-            string current = Directory.GetCurrentDirectory();
             int numClusters = int.Parse(textClusters.Text);
 
-            current = "cd '" + current.Substring(0, current.IndexOf("SVP")) + "Matlab'";
-            matlab.Execute(current);
+            matlab.Execute("highNumberSamples = 0;");
 
             matlab.Execute("numClusters = " + numClusters + ";");
 
@@ -181,9 +195,6 @@ namespace SVP
                 percentCluster[i] = percentClusterPrev[i, 0];
             }
 
-
-
-            double barPos = 0;
             barPanel.Children.Clear();
             double countClusterTotal = matlab.GetVariable("countClusterTotal", "base");
 
@@ -199,17 +210,16 @@ namespace SVP
                 Rectangle rect = new Rectangle();
                 rect.Width = barPanel.ActualWidth;
                 rect.Height = barPanel.ActualHeight * percent;
-                rect.Fill = new SolidColorBrush(Color.FromArgb(100, colors[i - 1, 0], colors[i - 1, 1], colors[i - 1, 2]));
-                
+                rect.Fill = new SolidColorBrush(Color.FromArgb(125, colors[i - 1, 0], colors[i - 1, 1], colors[i - 1, 2]));
+
                 rects[i - 1] = rect;
-                
+
                 foreach (Polyline polLine in vectorField.drawCluster(
-                                                clusterLines, 
-                                                Color.FromArgb(
-                                                    100,
-                                                    colors[i - 1, 0], 
-                                                    colors[i - 1, 1], 
-                                                    colors[i - 1, 2]), 
+                                                clusterLines,
+                                                Color.FromRgb(
+                                                    colors[i - 1, 0],
+                                                    colors[i - 1, 1],
+                                                    colors[i - 1, 2]),
                                                 4))
                 {
                     clusterCanvas[i - 1].Children.Add(polLine);
@@ -236,7 +246,28 @@ namespace SVP
 
         private string getLineMatrix(Line line)
         {
-            int columns = int.Parse(textSteps.Text);
+            /* double[,] lineArray = new double[numSteps * 2, numSeeds];
+
+             int currentSeed = 0;
+
+             foreach (Line line in lines)
+             {
+                 int currentStep = 0;
+
+                 foreach (Vec2 point in line.Points)
+                 {
+                     lineArray[currentStep, currentSeed] = point.X;
+                     lineArray[currentStep + numSteps, currentSeed] = point.Y;
+
+                     currentStep++;
+                 }
+
+                 currentSeed++;
+             }*/
+
+            // return lineArray;
+
+            int columns = numSteps;
 
             int i = 0;
 
@@ -297,7 +328,8 @@ namespace SVP
 
         private void buttonPreview_Click(object sender, RoutedEventArgs e)
         {
-            vectorField = new VectorField(lineCanvas.ActualWidth);
+            lineCanvas.Children.Clear();
+
             vectorField.import("D:\\WindData\\Entpackt");
             streamlineImage.Source = vectorField.createImage();
 
@@ -313,6 +345,10 @@ namespace SVP
 
             radioPath.IsEnabled = true;
             radioStream.IsEnabled = true;
+
+            buttonTravelSimulate.IsEnabled = false;
+            textTravelClusters.IsEnabled = false;
+            labelTravelClusters.IsEnabled = false;
         }
 
         private void radioStream_Checked(object sender, RoutedEventArgs e)
@@ -347,14 +383,22 @@ namespace SVP
 
         private void buttonTravelPreview_Click(object sender, RoutedEventArgs e)
         {
+            buttonSimulate.IsEnabled = false;
+            textSeeds.IsEnabled = false;
+            textSteps.IsEnabled = false;
+            textDelta.IsEnabled = false;
+            textClusters.IsEnabled = false;
+            labelClusters.IsEnabled = false;
+            labelDelta.IsEnabled = false;
+            labelSeeds.IsEnabled = false;
+            labelSteps.IsEnabled = false;
+
+            radioPath.IsEnabled = false;
+            radioStream.IsEnabled = false;
+
             barPanel.Children.Clear();
 
-            MLApp.MLApp matlab = new MLApp.MLApp();
-
-            string current = Directory.GetCurrentDirectory();
-
-            current = "cd '" + current.Substring(0, current.IndexOf("SVP")) + "Matlab'";
-            matlab.Execute(current);
+            lineCanvas.Children.Clear();
 
             matlab.Execute("load coastlines;");
 
@@ -368,8 +412,8 @@ namespace SVP
 
             for (int i = 0; i < coastlat.GetLength(0); i++)
             {
-                double x = (coastlon[i, 0] + 20) * 16;
-                double y = (coastlat[i, 0] - 80) * 16;
+                double x = (coastlon[i, 0] + 20) * 14;
+                double y = (coastlat[i, 0] - 80) * 14;
 
                 if (double.IsNaN(x))
                 {
@@ -400,6 +444,97 @@ namespace SVP
             buttonTravelSimulate.IsEnabled = true;
             textTravelClusters.IsEnabled = true;
             labelTravelClusters.IsEnabled = true;
+        }
+
+        private void buttonTravelSimulate_Click(object sender, RoutedEventArgs e)
+        {
+            matlab.Execute("simulateTravels;");
+            
+            matlab.Execute("connections(:, 1:2) = (connections(:, 1:2) + 20) * 14;");
+            matlab.Execute("connections(:, 3:4) = (connections(:, 3:4) - 80) * -14;");
+
+            double[,] travelLines = matlab.GetVariable("connections", "base");
+
+            //double x = (coastlon[i, 0] + 20) * 16;
+            //double y = (coastlat[i, 0] - 80) * 16;
+
+            foreach (Polyline line in travel.drawLines(travelLines, Colors.Blue, 1))
+            {
+                centerCanvas.Children.Add(line);
+                Canvas.SetTop(line, 0);
+                Canvas.SetLeft(line, 0);
+            }
+
+            buttonTravelCluster.IsEnabled = true;
+        }
+
+        private void buttonTravelCluster_Click(object sender, RoutedEventArgs e)
+        {
+            int numClusters = int.Parse(textClusters.Text);
+
+            matlab.Execute("numClusters = " + numClusters + ";");
+
+            matlab.Execute("highNumberSamples = 1;");
+            
+            matlab.Execute("streamlines = connections;");
+
+            matlab.Execute("streamlines = streamlines';");
+
+            matlab.Execute("calculateVariabilityLines");
+
+            double[,] centerLines = matlab.GetVariable("reconCenterLines", "base");
+
+            double[,] percentClusterPrev = matlab.GetVariable("percentCluster", "base");
+
+            //streamlineImage.Source = vectorField.createImage(centerLines, percentCluster);
+
+            double[] percentCluster = new double[percentClusterPrev.GetLength(0)];
+
+            for (int i = 0; i < percentClusterPrev.GetLength(0); i++)
+            {
+                percentCluster[i] = percentClusterPrev[i, 0];
+            }
+
+            barPanel.Children.Clear();
+            double countClusterTotal = matlab.GetVariable("countClusterTotal", "base");
+
+            Rectangle[] rects = new Rectangle[percentClusterPrev.GetLength(0)];
+
+            /*for (int i = 1; i <= numClusters; i++)
+            {
+                //matlab.Execute("sampleStreamlines" + i + " = sampleStreamlines" + i + "'");
+                double[,] clusterLines = matlab.GetVariable("sampleStreamlines" + i, "base");
+
+                double percent = percentCluster[i - 1];
+
+                Rectangle rect = new Rectangle();
+                rect.Width = barPanel.ActualWidth;
+                rect.Height = barPanel.ActualHeight * percent;
+                rect.Fill = new SolidColorBrush(Color.FromArgb(125, colors[i - 1, 0], colors[i - 1, 1], colors[i - 1, 2]));
+
+                rects[i - 1] = rect;
+
+                foreach (Polyline polLine in vectorField.drawCluster(
+                                                clusterLines,
+                                                Color.FromRgb(
+                                                    colors[i - 1, 0],
+                                                    colors[i - 1, 1],
+                                                    colors[i - 1, 2]),
+                                                4))
+                {
+                    clusterCanvas[i - 1].Children.Add(polLine);
+                    Canvas.SetTop(polLine, 0);
+                    Canvas.SetLeft(polLine, 0);
+                }
+            }*/
+
+            
+            foreach (Polyline centerLine in vectorField.drawCenterLines(centerLines, percentClusterPrev, colors))
+            {
+                centerCanvas.Children.Add(centerLine);
+                Canvas.SetTop(centerLine, 0);
+                Canvas.SetLeft(centerLine, 0);
+            }
         }
     }
 }

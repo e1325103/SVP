@@ -55,6 +55,7 @@
     </ApplicationDefinition>
     <Compile Include="Line.cs" />
     <Compile Include="RungeKutta.cs" />
+    <Compile Include="Travel.cs" />
     <Compile Include="Vec2.cs" />
     <Compile Include="VectorField.cs" />
     <Page Include="MainWindow.xaml">

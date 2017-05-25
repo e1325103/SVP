@@ -236,7 +236,7 @@ namespace SVP
             }
 
             return polLines;
-        }
+        }       
 
         public List<Polyline> drawCluster(double[,] clusterLines, Color color, double stroke)
         {

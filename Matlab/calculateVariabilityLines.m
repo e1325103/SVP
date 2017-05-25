@@ -12,7 +12,7 @@
 %load('streamlines.mat');
 %streamlines = connections';
 
-highNumberSamples = 0;
+%highNumberSamples = 0;
 
 pYMin = 1;
 pYMax = (size(streamlines, 1) / 2);
@@ -28,6 +28,10 @@ colors = 'rbgycm';
 
 if(exist('numClusters', 'var')~=1)
     numClusters = 3;
+end
+
+if(exist('highNumberSamples', 'var')~=1)
+    highNumberSamples = 0;
 end
 
 if(exist('numBasis', 'var')~=1)

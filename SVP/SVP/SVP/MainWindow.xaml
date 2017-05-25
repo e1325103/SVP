@@ -16,11 +16,11 @@
 
         <Canvas Name="lineCanvas" Grid.Row="0" ClipToBounds="True" Grid.Column="0" />
 
-        <Canvas Name="clusterCanvas1" Grid.Row="0" Grid.Column="0" Opacity="0.4" ClipToBounds="True"/>
-        <Canvas Name="clusterCanvas2" Grid.Row="0" Grid.Column="0" Opacity="0.4" ClipToBounds="True"/>
-        <Canvas Name="clusterCanvas3" Grid.Row="0" Grid.Column="0" Opacity="0.4" ClipToBounds="True"/>
-        <Canvas Name="clusterCanvas4" Grid.Row="0" Grid.Column="0" Opacity="0.4" ClipToBounds="True"/>
-        <Canvas Name="clusterCanvas5" Grid.Row="0" Grid.Column="0" Opacity="0.4" ClipToBounds="True"/>
+        <Canvas Name="clusterCanvas1" Grid.Row="0" Grid.Column="0" Opacity="0.5" ClipToBounds="True"/>
+        <Canvas Name="clusterCanvas2" Grid.Row="0" Grid.Column="0" Opacity="0.5" ClipToBounds="True"/>
+        <Canvas Name="clusterCanvas3" Grid.Row="0" Grid.Column="0" Opacity="0.5" ClipToBounds="True"/>
+        <Canvas Name="clusterCanvas4" Grid.Row="0" Grid.Column="0" Opacity="0.5" ClipToBounds="True"/>
+        <Canvas Name="clusterCanvas5" Grid.Row="0" Grid.Column="0" Opacity="0.5" ClipToBounds="True"/>
 
         <Canvas Name="centerCanvas" Grid.Row="0" Grid.Column="0" Opacity="0.8" ClipToBounds="True"/>
 
@@ -77,8 +77,8 @@
             <GroupBox Header="Travels">
                 <StackPanel>
                     <Button x:Name="buttonTravelPreview" Margin="6px" Content="Load" Click="buttonTravelPreview_Click"/>
-                    <Button x:Name="buttonTravelSimulate" IsEnabled="False" Margin="6px" Content="Simulate"/>
-                    <Button x:Name="buttonTravelCluster" IsEnabled="False" Margin="6px" Content="Cluster"/>
+                    <Button x:Name="buttonTravelSimulate" IsEnabled="False" Margin="6px" Content="Simulate" Click="buttonTravelSimulate_Click"/>
+                    <Button x:Name="buttonTravelCluster" IsEnabled="False" Margin="6px" Content="Cluster" Click="buttonTravelCluster_Click"/>
                     <Button Visibility="Hidden" Margin="6px"/>
 
                     <StackPanel Orientation="Horizontal">
