@@ -209,7 +209,7 @@ namespace SVP
             return BitmapSource.Create(1000, 1000, 96, 96, PixelFormats.Bgr32, null, backgroundImage, stride);
         }
 
-        public List<Polyline> drawCenterLines(double[,] centerLines, double[,] percentages)
+        public List<Polyline> drawCenterLines(double[,] centerLines, double[,] percentages, byte[,] colors)
         {
             List<Line> lines = new List<Line>();
             List<Polyline> polLines = new List<Polyline>();
@@ -230,7 +230,7 @@ namespace SVP
 
                 lines.Add(line);
 
-                polLines.Add(drawLines(lines, Colors.Black, 10 * percentages[i, 0])[0]);
+                polLines.Add(drawLines(lines, Color.FromRgb((byte)(colors[i, 0] * 0.7), (byte)(colors[i, 1] * 0.7), (byte)(colors[i, 2] * 0.7)), 10 * percentages[i, 0])[0]);
 
                 lines.Clear();
             }

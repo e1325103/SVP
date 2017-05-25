@@ -35,5 +35,5 @@ for e = 1:size(j, 1)
     j(e, 5).NAME
 end
 hold off;
-xlim([-60 60])
+xlim([-10 40])
 ylim([-20 80])

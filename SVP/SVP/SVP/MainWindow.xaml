@@ -14,7 +14,7 @@
         </Grid.ColumnDefinitions>
         <Image Name="streamlineImage" Grid.Row="0" Grid.Column="0" MouseLeftButtonUp="streamlineImage_MouseLeftButtonUp" />
 
-        <Canvas Name="lineCanvas" Grid.Row="0" Grid.Column="0" />
+        <Canvas Name="lineCanvas" Grid.Row="0" ClipToBounds="True" Grid.Column="0" />
 
         <Canvas Name="clusterCanvas1" Grid.Row="0" Grid.Column="0" Opacity="0.4" ClipToBounds="True"/>
         <Canvas Name="clusterCanvas2" Grid.Row="0" Grid.Column="0" Opacity="0.4" ClipToBounds="True"/>
@@ -22,51 +22,73 @@
         <Canvas Name="clusterCanvas4" Grid.Row="0" Grid.Column="0" Opacity="0.4" ClipToBounds="True"/>
         <Canvas Name="clusterCanvas5" Grid.Row="0" Grid.Column="0" Opacity="0.4" ClipToBounds="True"/>
 
-        <Canvas Name="centerCanvas" Grid.Row="0" Grid.Column="0" Opacity="0.4" ClipToBounds="True"/>
+        <Canvas Name="centerCanvas" Grid.Row="0" Grid.Column="0" Opacity="0.8" ClipToBounds="True"/>
 
 
         <!--<Canvas Name="barCanvas" Grid.Column="1" />-->
 
-        <StackPanel Name="barPanel" Grid.Column="1" MaxWidth="6px">
-            
-        </StackPanel> 
-
-        <StackPanel Grid.Column="2">
-            <Button x:Name="buttonPreview" Click="buttonPreview_Click" Margin="6px" Content="Load"/>
-            <Button x:Name="buttonSimulate" IsEnabled="False" Click="buttonSimulate_Click" Margin="6px" Content="Simulate"/>
-            <Button x:Name="buttonCluster" IsEnabled="False" Click="buttonCluster_Click" Margin="6px" Content="Cluster"/>
-            <Button Visibility="Hidden" Margin="6px"/>
-
-            <StackPanel Orientation="Horizontal">
-                <RadioButton Name="radioStream" Content="Streamlines" Width="120px" Margin="6px" GroupName="radios" IsChecked="True" IsEnabled="False" Checked="radioStream_Checked" />
-                <RadioButton Name="radioPath" Content="Pathlines" Width="120px" Margin="6px" GroupName="radios" IsEnabled="False" Checked="radioPath_Checked" />
-            </StackPanel>
-
-            <StackPanel Orientation="Horizontal">
-                <Label Name="labelSeeds" Content="Number of Seeds: " Margin="6" Width="120" IsEnabled="False"></Label>
-                <TextBox Height="23" x:Name="textSeeds" Width="120" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="100"/>
-            </StackPanel>
-
-            <StackPanel Orientation="Horizontal">
-                <Label Name="labelSteps" Content="Number of Steps: " Margin="6" Width="120" IsEnabled="False"></Label>
-                <TextBox Height="23" x:Name="textSteps" Width="120" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="1000"/>
-            </StackPanel>
-
-            <StackPanel Orientation="Horizontal">
-                <Label Name="labelDelta" Content="Delta: " Margin="6" Width="120" IsEnabled="False"></Label>
-                <TextBox Height="23" Width="120" x:Name="textDelta" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="0,5" />
-            </StackPanel>
-
-            <StackPanel Orientation="Horizontal">
-                <Label Name="labelClusters" Content="Number of Clusters: " Margin="6" Width="120" IsEnabled="False"></Label>
-                <TextBox Height="23" Width="120" x:Name="textClusters" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="3"/>
-            </StackPanel>
-
-            <StackPanel Orientation="Horizontal">
-                <Label Name="labelTime" Content="Time per Step: " Margin="6" Width="120" IsEnabled="False"></Label>
-                <TextBox Height="23" Width="120" x:Name="textTime" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="0,1"/>
-            </StackPanel>
+        <StackPanel Name="barPanel" Grid.Column="1" Margin="6px,0px,6px,0px">
 
         </StackPanel>
+
+        <StackPanel Grid.Column="2">
+
+            <GroupBox Header="Hurricane">
+
+                <StackPanel Grid.Column="2">
+                    <Button x:Name="buttonPreview" Click="buttonPreview_Click" Margin="6px" Content="Load"/>
+                    <Button x:Name="buttonSimulate" IsEnabled="False" Click="buttonSimulate_Click" Margin="6px" Content="Simulate"/>
+                    <Button x:Name="buttonCluster" IsEnabled="False" Click="buttonCluster_Click" Margin="6px" Content="Cluster"/>
+                    <Button Visibility="Hidden" Margin="6px"/>
+
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton x:Name="radioStream" Content="Streamlines" Width="120px" Margin="6px" GroupName="radios" IsChecked="True" IsEnabled="False" Checked="radioStream_Checked" />
+                        <RadioButton x:Name="radioPath" Content="Pathlines" Width="120px" Margin="6px" GroupName="radios" IsEnabled="False" Checked="radioPath_Checked" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Label x:Name="labelSeeds" Content="Number of Seeds: " Margin="6" Width="120" IsEnabled="False"/>
+                        <TextBox Height="23" x:Name="textSeeds" Width="120" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="100"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Label x:Name="labelSteps" Content="Number of Steps: " Margin="6" Width="120" IsEnabled="False"/>
+                        <TextBox Height="23" x:Name="textSteps" Width="120" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="1000"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Label x:Name="labelDelta" Content="Delta: " Margin="6" Width="120" IsEnabled="False"/>
+                        <TextBox Height="23" Width="120" x:Name="textDelta" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="0,5" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Label x:Name="labelClusters" Content="Number of Clusters: " Margin="6" Width="120" IsEnabled="False"/>
+                        <TextBox Height="23" Width="120" x:Name="textClusters" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="4"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Label x:Name="labelTime" Content="Time per Step: " Margin="6" Width="120" IsEnabled="False"/>
+                        <TextBox Height="23" Width="120" x:Name="textTime" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="0,1"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Travels">
+                <StackPanel>
+                    <Button x:Name="buttonTravelPreview" Margin="6px" Content="Load" Click="buttonTravelPreview_Click"/>
+                    <Button x:Name="buttonTravelSimulate" IsEnabled="False" Margin="6px" Content="Simulate"/>
+                    <Button x:Name="buttonTravelCluster" IsEnabled="False" Margin="6px" Content="Cluster"/>
+                    <Button Visibility="Hidden" Margin="6px"/>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Label x:Name="labelTravelClusters" Content="Number of Clusters: " Margin="6" Width="120" IsEnabled="False"/>
+                        <TextBox Height="23" Width="120" x:Name="textTravelClusters" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="4"/>
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+
+        </StackPanel>
+
     </Grid>
 </Window>

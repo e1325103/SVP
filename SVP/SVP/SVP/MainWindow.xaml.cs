@@ -167,32 +167,41 @@ namespace SVP
             matlab.Execute("streamlines = streamlines';");
 
             matlab.Execute("calculateVariabilityLines");
-            matlab.Execute("reconCenterLines = reconCenterLines'");
 
             double[,] centerLines = matlab.GetVariable("reconCenterLines", "base");
 
-            double[,] percentCluster = matlab.GetVariable("percentCluster", "base");
+            double[,] percentClusterPrev = matlab.GetVariable("percentCluster", "base");
 
             //streamlineImage.Source = vectorField.createImage(centerLines, percentCluster);
+
+            double[] percentCluster = new double[percentClusterPrev.GetLength(0)];
+
+            for (int i = 0; i < percentClusterPrev.GetLength(0); i++)
+            {
+                percentCluster[i] = percentClusterPrev[i, 0];
+            }
+
+
 
             double barPos = 0;
             barPanel.Children.Clear();
             double countClusterTotal = matlab.GetVariable("countClusterTotal", "base");
+
+            Rectangle[] rects = new Rectangle[percentClusterPrev.GetLength(0)];
 
             for (int i = 1; i <= numClusters; i++)
             {
                 //matlab.Execute("sampleStreamlines" + i + " = sampleStreamlines" + i + "'");
                 double[,] clusterLines = matlab.GetVariable("sampleStreamlines" + i, "base");
 
-                double percent = percentCluster[i - 1, 0];
+                double percent = percentCluster[i - 1];
 
                 Rectangle rect = new Rectangle();
                 rect.Width = barPanel.ActualWidth;
                 rect.Height = barPanel.ActualHeight * percent;
                 rect.Fill = new SolidColorBrush(Color.FromArgb(100, colors[i - 1, 0], colors[i - 1, 1], colors[i - 1, 2]));
-                barPanel.Children.Add(rect);
-
-                barPos += percent;
+                
+                rects[i - 1] = rect;
                 
                 foreach (Polyline polLine in vectorField.drawCluster(
                                                 clusterLines, 
@@ -209,7 +218,15 @@ namespace SVP
                 }
             }
 
-            foreach (Polyline centerLine in vectorField.drawCenterLines(centerLines, percentCluster))
+            Array.Sort(percentCluster, rects);
+
+            foreach (Rectangle rect in rects)
+            {
+                barPanel.Children.Add(rect);
+            }
+
+
+            foreach (Polyline centerLine in vectorField.drawCenterLines(centerLines, percentClusterPrev, colors))
             {
                 centerCanvas.Children.Add(centerLine);
                 Canvas.SetTop(centerLine, 0);
@@ -326,6 +343,63 @@ namespace SVP
                     }
                 }
             }
+        }
+
+        private void buttonTravelPreview_Click(object sender, RoutedEventArgs e)
+        {
+            barPanel.Children.Clear();
+
+            MLApp.MLApp matlab = new MLApp.MLApp();
+
+            string current = Directory.GetCurrentDirectory();
+
+            current = "cd '" + current.Substring(0, current.IndexOf("SVP")) + "Matlab'";
+            matlab.Execute(current);
+
+            matlab.Execute("load coastlines;");
+
+            double[,] coastlat = matlab.GetVariable("coastlat", "base");
+            double[,] coastlon = matlab.GetVariable("coastlon", "base");
+
+            lineCanvas.Children.Clear();
+
+            PointCollection pointCol = new PointCollection();
+
+
+            for (int i = 0; i < coastlat.GetLength(0); i++)
+            {
+                double x = (coastlon[i, 0] + 20) * 16;
+                double y = (coastlat[i, 0] - 80) * 16;
+
+                if (double.IsNaN(x))
+                {
+                    Polyline polLine = new Polyline();
+                    polLine.Stroke = new SolidColorBrush(Colors.Black);
+                    polLine.StrokeThickness = 0.5;
+
+                    polLine.Points = pointCol;
+
+                    lineCanvas.Children.Add(polLine);
+
+                    pointCol = new PointCollection();
+                }
+                else
+                {
+                    pointCol.Add(new Point(x, y * -1));
+                }
+            }
+
+            Polyline lastPolLine = new Polyline();
+            lastPolLine.Stroke = new SolidColorBrush(Colors.Black);
+            lastPolLine.StrokeThickness = 0.5;
+
+            lastPolLine.Points = pointCol;
+
+            lineCanvas.Children.Add(lastPolLine);
+
+            buttonTravelSimulate.IsEnabled = true;
+            textTravelClusters.IsEnabled = true;
+            labelTravelClusters.IsEnabled = true;
         }
     }
 }
