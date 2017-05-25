@@ -32,6 +32,12 @@ for e = 1:size(j, 1)
         connections = [connections; x, y];
     end
 end
+<<<<<<< HEAD:Matlab/simulateTravels.m
 % hold off;
 % xlim([-40 60])
 % ylim([30 80])
+=======
+hold off;
+xlim([-10 40])
+ylim([-20 80])
+>>>>>>> fc9b21f1ce0c595de704a36b679174324fea6b55:Matlab/countriesTest.m
