@@ -15,6 +15,7 @@
         <Image Name="streamlineImage" Grid.Row="0" Grid.Column="0" MouseLeftButtonUp="streamlineImage_MouseLeftButtonUp" />
 
         <Canvas Name="lineCanvas" Grid.Row="0" ClipToBounds="True" Grid.Column="0" />
+        <Canvas Name="borderCanvas" Grid.Row="0" ClipToBounds="True" Grid.Column="0" />
 
         <Canvas Name="clusterCanvas1" Grid.Row="0" Grid.Column="0" Opacity="0.5" ClipToBounds="True"/>
         <Canvas Name="clusterCanvas2" Grid.Row="0" Grid.Column="0" Opacity="0.5" ClipToBounds="True"/>

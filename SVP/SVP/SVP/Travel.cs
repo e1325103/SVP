@@ -9,9 +9,12 @@ using System.Windows.Shapes;
 
 namespace SVP
 {
-    public class Travel
+    public class Travel : IClusterObject
     {
-        public List<Polyline> drawLines(double[,] travelLines, Color color, double stroke)
+
+        public List<Line> lines { get; set; }
+
+       /* public List<Polyline> drawLines(double[,] travelLines, Color color, double stroke)
         {
             List<Polyline> polLines = new List<Polyline>(); 
 
@@ -34,6 +37,19 @@ namespace SVP
             }
 
             return polLines;
+        }*/
+        public void executeMatlab(MLApp.MLApp matlab)
+        {
+            matlab.Execute("highNumberSamples = 1;");
+
+            matlab.Execute("streamlines = connections;");
+
+            matlab.Execute("streamlines = streamlines';");
+        }
+
+        public List<Line> transformLines(List<Line> lines)
+        {
+            return lines;
         }
     }
 }

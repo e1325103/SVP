@@ -13,7 +13,7 @@ using System.Windows.Shapes;
 
 namespace SVP
 {
-    public class VectorField
+    public class VectorField : IClusterObject
     {
         private byte[] backgroundImage;
 
@@ -22,6 +22,8 @@ namespace SVP
         private double transform;
 
         private Vec2[, ,] field;
+
+        public List<Line> rungeLines {get; set;}
 
         public VectorField(double width)
         {
@@ -110,9 +112,32 @@ namespace SVP
             return BitmapSource.Create(500, 500, 96, 96, PixelFormats.Bgr32, null, pixelData, stride);
         }
 
-        public List<Polyline> drawLines(List<Line> lines, Color color, double stroke)
-        { 
-            List<Polyline> polLines = new List<Polyline>();
+        public List<Line> transformLines(List<Line> lines)
+        {
+            List<Line> transformedLines = new List<Line>();
+
+            foreach (Line line in lines)
+            {
+                Line transformedLine = new Line();
+
+                foreach (Vec2 point in line.Points)
+                {
+                    double x = (point.X - 1) * 2;
+                    double y = (point.Y - 1) * 2;
+                    
+
+                    if (x < 1000 && y < 1000 && x >= 0 && y >= 0)
+                    {
+                        transformedLine.add(new Vec2((int)Math.Round(y * transform, 0), (int)Math.Round(x * transform, 0)));
+                    }
+                }
+
+                transformedLines.Add(transformedLine);
+            }
+
+            return transformedLines;
+
+            /*List<Polyline> polLines = new List<Polyline>();
 
             foreach (Line line in lines)
             {
@@ -126,11 +151,7 @@ namespace SVP
                 {
                     double x = (point.X - 1) * 2;
                     double y = (point.Y - 1) * 2;
-
-                    /*if (x >= 1000) x = 999;
-                    if (y >= 1000) y = 999;
-                    if (x < 0) x = 0;
-                    if (y < 0) y = 0;*/
+                    
 
                     if (x < 1000 && y < 1000 && x >= 0 && y >= 0)
                     {
@@ -142,7 +163,7 @@ namespace SVP
                 polLines.Add(polLine);
             }
 
-            return polLines;
+            return polLines;*/
         }
 
         public Vec2 interpolateTrilinear(float x, float y, float t)
@@ -207,37 +228,8 @@ namespace SVP
 
             int stride = 1000 * PixelFormats.Bgr32.BitsPerPixel / 8;
             return BitmapSource.Create(1000, 1000, 96, 96, PixelFormats.Bgr32, null, backgroundImage, stride);
-        }
-
-        public List<Polyline> drawCenterLines(double[,] centerLines, double[,] percentages, byte[,] colors)
-        {
-            List<Line> lines = new List<Line>();
-            List<Polyline> polLines = new List<Polyline>();
-
-            Line line;
-
-            for (int i = 0; i < centerLines.GetLength(0); i++)
-            {
-                Vec2 point;
-
-                line = new Line();
-
-                for (int j = 0; j < (centerLines.GetLength(1) / 2); j++)
-                {
-                    point = new Vec2((float)centerLines[i, j] /*- 1*/, (float)centerLines[i, (j + (centerLines.GetLength(1) / 2))] /*- 1*/);  
-                    line.add(point);
-                }
-
-                lines.Add(line);
-
-                polLines.Add(drawLines(lines, Color.FromRgb((byte)(colors[i, 0] * 0.7), (byte)(colors[i, 1] * 0.7), (byte)(colors[i, 2] * 0.7)), 10 * percentages[i, 0])[0]);
-
-                lines.Clear();
-            }
-
-            return polLines;
         }       
-
+        
         public List<Polyline> drawCluster(double[,] clusterLines, Color color, double stroke)
         {
             List<Line> lines = new List<Line>();
@@ -260,6 +252,65 @@ namespace SVP
             }
 
             return drawLines(lines, color, stroke);         
+        }
+
+        public List<Polyline> drawLines(List<Line> lines, Color color, double stroke)
+        {
+            List<Polyline> polLines = new List<Polyline>();
+
+            foreach (Line line in lines)
+            {
+                Polyline polLine = new Polyline();
+                polLine.Stroke = new SolidColorBrush(color);
+                polLine.StrokeThickness = stroke;
+
+                PointCollection pointCol = new PointCollection();
+
+                foreach (Vec2 point in line.Points)
+                {
+                    double x = (point.X - 1) * 2;
+                    double y = (point.Y - 1) * 2;
+
+                    /*if (x >= 1000) x = 999;
+                    if (y >= 1000) y = 999;
+                    if (x < 0) x = 0;
+                    if (y < 0) y = 0;*/
+
+                    if (x < 1000 && y < 1000 && x >= 0 && y >= 0)
+                    {
+                        pointCol.Add(new Point((int)Math.Round(y * transform, 0), (int)Math.Round(x * transform, 0)));
+                    }
+                }
+
+                polLine.Points = pointCol;
+                polLines.Add(polLine);
+            }
+
+            return polLines;
+        }
+
+        public void executeMatlab(MLApp.MLApp matlab)
+        {
+            matlab.Execute("highNumberSamples = 0;");
+
+            bool first = true;
+
+            foreach (Line line in rungeLines)
+            {
+                string t = Util.getLineMatrix(line);
+
+                if (first)
+                {
+                    matlab.Execute("streamlines = [" + Util.getLineMatrix(line));
+                    first = false;
+                }
+                else
+                {
+                    matlab.Execute("streamlines = [streamlines; " + Util.getLineMatrix(line));
+                }
+            }
+
+            matlab.Execute("streamlines = streamlines';");
         }
     }
 }
