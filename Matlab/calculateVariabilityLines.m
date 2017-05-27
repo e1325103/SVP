@@ -10,9 +10,9 @@
 
 %streamlines = A;
 %load('streamlines.mat');
-%streamlines = connections';
-
-%highNumberSamples = 0;
+streamlines = connections';
+% 
+% highNumberSamples = 1;
 
 pYMin = 1;
 pYMax = (size(streamlines, 1) / 2);
@@ -43,7 +43,7 @@ if(exist('convInter', 'var')~=1)
 end
 
 sampleOffset = 2;
-numSamples = 30000;
+numSamples = 1000;
 
 meanVector = determineMeanVector(streamlines);
 
@@ -70,6 +70,8 @@ end
 reducedStreamlines = reduceData(basis, numBasis, streamlines, meanVector);
 
 lineIDs = kmeans(reducedStreamlines', numClusters);
+% lineIDs = clusterdata(reducedStreamlines', 'maxclust', numClusters, 'distance', 'euclidean', 'linkage', 'average')';
+% dendrogram(linkage(reducedStreamlines', 'average'),'Orientation','left','ColorThreshold',14);
 
 centerLines = zeros(numClusters, numBasis);
 
@@ -141,9 +143,10 @@ end
 %hold off;
 
 %subplot(3, 2, 6);
-%figure;
-%hold on;
-reconCenterLines = reconCenterLines';
+% figure;
+% hold on;
+% load coastlines;
+% plot(coastlon, coastlat);
 percentCluster = zeros(numClusters, 1);
 countClusterTotal = size(lineIDs, 1);
 for i = 1:numClusters
@@ -152,5 +155,38 @@ for i = 1:numClusters
     eval(strcat('sampleStreamlines', int2str(i), '=', 'sampleStreamlines', int2str(i), '''', ';'));
     eval(strcat('percentCluster(', int2str(i), ')=sum(lineIDs == ', int2str(i), ') / countClusterTotal;'));
 end
-%plot(reconCenterLines(pYMin:pYMax, :), reconCenterLines(pXMin:pXMax, :), 'black', 'linewidth', 2);
-%hold off;
+
+% plot(reconCenterLines(pYMin:pYMax, :), reconCenterLines(pXMin:pXMax, :), 'black', 'linewidth', 2);
+reconCenterLines = reconCenterLines';
+% hold off;
+% xlim([-40 60])
+% ylim([30 80])
+
+% for i = 1:numClusters
+%     I = zeros(1000, 1000, 'uint8');
+%     eval(strcat('sampleStreamlines=sampleStreamlines', int2str(i), ';'));
+%     for r = sampleStreamlines'
+%         for c = 1:((size(r) / 2) - 1)
+%             x = [r(c) r(c + 1)] * 2.5 + 250;
+%             y = [r(pXMin + c - 1) r(pXMin + c)] * 2.5+250;
+%             nPoints = max(abs(diff(x)), abs(diff(y)))+1;
+%             rIndex = round(linspace(y(1), y(2), nPoints));
+%             cIndex = round(linspace(x(1), x(2), nPoints));
+%             index = sub2ind(size(I), rIndex, cIndex);
+%             I(index) = 255; 
+%         end
+%     end
+%     se = strel('square',2);
+%     I = imdilate(I, se);
+%     [x, y] = find(I);
+%     k = boundary(x, y, 0.2);
+%     x = x(k);
+%     y = y(k);
+%     eval(strcat('boundary', int2str(i), '=[x, y];'));
+% end
+% 
+% plot(boundary1(:, 1), boundary1(:, 2))
+% hold on
+% plot(boundary2(:, 1), boundary2(:, 2))
+% plot(boundary3(:, 1), boundary3(:, 2))
+% hold off
