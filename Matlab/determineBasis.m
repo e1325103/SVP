@@ -1,5 +1,4 @@
-% Nicolas Grossmann, 1325103
-
+%% Determine PCA Basis
 function [basis] = determineBasis(A, eigenvectors)
     basis = normc(A * eigenvectors);
 end

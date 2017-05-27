@@ -96,13 +96,9 @@ streamlines = connections';
 
 sampleOffset = 2;
 
-meanVector = determineMeanVector(streamlines);
+meanVector = mean(streamlines, 2);
 
-streamlines = determineMeanSubtracted(streamlines, meanVector);
-</pre><pre class="codeoutput error">Undefined function or variable 'connections'.
-
-Error in calculateVariabilityLines (line 23)
-streamlines = connections';
+streamlines = streamlines - repmat(meanVector, 1, size(streamlines, 2));
 </pre><h2>Calculate PCA Basis<a name="2"></a></h2><pre class="codeinput"><span class="keyword">if</span> ~highNumberSamples
 	[eigenvectors, eigenvalues] = eig(streamlines' * streamlines, <span class="string">'vector'</span>);
 <span class="keyword">else</span>
@@ -114,7 +110,7 @@ streamlines = connections';
 <span class="keyword">else</span>
     basis = eigenvectors;
 <span class="keyword">end</span>
-reducedStreamlines = reduceData(basis, numBasis, streamlines, meanVector);
+reducedStreamlines = reduceData(basis, numBasis, streamlines);
 </pre><h2>Cluster Reduced Streamlines with k-Means<a name="4"></a></h2><pre class="codeinput">lineIDs = kmeans(reducedStreamlines', numClusters);
 </pre><h2>Calculate the Median Streamline for each Cluster<a name="5"></a></h2><pre class="codeinput">centerLines = zeros(numClusters, numBasis);
 
@@ -125,7 +121,7 @@ reducedStreamlines = reduceData(basis, numBasis, streamlines, meanVector);
 
 reconStreamlines = reconstructData(basis, numBasis, reducedStreamlines, meanVector);
 reconCenterLines = reconstructData(basis, numBasis, centerLines', meanVector);
-</pre><h2>Uniformly Sample each Cluster's Convidence Lobe<a name="6"></a></h2><pre class="codeinput">threshold = sqrt(chi2inv(convInter,2));
+</pre><h2>Uniformly Sample each Cluster's Convidence Lobe<a name="6"></a></h2><p>The region around all clusters is sampled using the Monte-Carlo Method. The points in a rectengular region are randomly chosen and only those who lie with in the bounds of the convidence elipsoid get chosen. To check if a point lies with the multidimensional elipsoid its Mahalanobis distance is calculated and compared against a threshold.</p><pre class="codeinput">threshold = sqrt(chi2inv(convInter, numBasis));
 
 <span class="keyword">for</span> i = 1:numClusters
     gridStreamlines = reducedStreamlines(:,lineIDs == i);
@@ -146,7 +142,6 @@ reconCenterLines = reconstructData(basis, numBasis, centerLines', meanVector);
     <span class="keyword">end</span>
 <span class="keyword">end</span>
 
-
 percentCluster = zeros(numClusters, 1);
 countClusterTotal = size(lineIDs, 1);
 <span class="keyword">for</span> i = 1:numClusters
@@ -154,11 +149,7 @@ countClusterTotal = size(lineIDs, 1);
     eval(strcat(<span class="string">'percentCluster('</span>, int2str(i), <span class="string">')=sum(lineIDs == '</span>, int2str(i), <span class="string">') / countClusterTotal;'</span>));
 <span class="keyword">end</span>
 reconCenterLines = reconCenterLines';
-</pre><h2>Calculate Boundary Region for the Sampled Lobes<a name="7"></a></h2><pre class="codeinput"><span class="comment">% hold off;</span>
-<span class="comment">% xlim([-40 60])</span>
-<span class="comment">% ylim([30 80])</span>
-
-<span class="comment">% for i = 1:numClusters</span>
+</pre><h2>Calculate Boundary Region for the Sampled Lobes<a name="7"></a></h2><pre class="codeinput"><span class="comment">% for i = 1:numClusters</span>
 <span class="comment">%     I = zeros(1000, 1000, 'uint8');</span>
 <span class="comment">%     eval(strcat('sampleStreamlines=sampleStreamlines', int2str(i), ';'));</span>
 <span class="comment">%     for r = sampleStreamlines'</span>
@@ -180,12 +171,6 @@ reconCenterLines = reconCenterLines';
 <span class="comment">%     y = y(k);</span>
 <span class="comment">%     eval(strcat('boundary', int2str(i), '=[x, y];'));</span>
 <span class="comment">% end</span>
-<span class="comment">%</span>
-<span class="comment">% plot(boundary1(:, 1), boundary1(:, 2))</span>
-<span class="comment">% hold on</span>
-<span class="comment">% plot(boundary2(:, 1), boundary2(:, 2))</span>
-<span class="comment">% plot(boundary3(:, 1), boundary3(:, 2))</span>
-<span class="comment">% hold off</span>
 </pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Streamline Variability Calculation
@@ -234,9 +219,9 @@ end
 
 sampleOffset = 2;
 
-meanVector = determineMeanVector(streamlines);
+meanVector = mean(streamlines, 2);
 
-streamlines = determineMeanSubtracted(streamlines, meanVector);
+streamlines = streamlines - repmat(meanVector, 1, size(streamlines, 2));
 
 %% Calculate PCA Basis
 
@@ -254,7 +239,7 @@ if ~highNumberSamples
 else
     basis = eigenvectors;
 end
-reducedStreamlines = reduceData(basis, numBasis, streamlines, meanVector);
+reducedStreamlines = reduceData(basis, numBasis, streamlines);
 
 %% Cluster Reduced Streamlines with k-Means
 
@@ -273,8 +258,13 @@ reconStreamlines = reconstructData(basis, numBasis, reducedStreamlines, meanVect
 reconCenterLines = reconstructData(basis, numBasis, centerLines', meanVector);
 
 %% Uniformly Sample each Cluster's Convidence Lobe
+% The region around all clusters is sampled using the Monte-Carlo Method.
+% The points in a rectengular region are randomly chosen and only those who
+% lie with in the bounds of the convidence elipsoid get chosen. To check if
+% a point lies with the multidimensional elipsoid its Mahalanobis distance
+% is calculated and compared against a threshold.
 
-threshold = sqrt(chi2inv(convInter,2));
+threshold = sqrt(chi2inv(convInter, numBasis));
 
 for i = 1:numClusters
     gridStreamlines = reducedStreamlines(:,lineIDs == i);
@@ -295,7 +285,6 @@ for i = 1:numClusters
     end
 end
 
-
 percentCluster = zeros(numClusters, 1);
 countClusterTotal = size(lineIDs, 1);
 for i = 1:numClusters
@@ -305,10 +294,6 @@ end
 reconCenterLines = reconCenterLines';
 
 %% Calculate Boundary Region for the Sampled Lobes
-
-% hold off;
-% xlim([-40 60])
-% ylim([30 80])
 
 % for i = 1:numClusters
 %     I = zeros(1000, 1000, 'uint8');
@@ -332,11 +317,5 @@ reconCenterLines = reconCenterLines';
 %     y = y(k);
 %     eval(strcat('boundary', int2str(i), '=[x, y];'));
 % end
-% 
-% plot(boundary1(:, 1), boundary1(:, 2))
-% hold on
-% plot(boundary2(:, 1), boundary2(:, 2))
-% plot(boundary3(:, 1), boundary3(:, 2))
-% hold off
 ##### SOURCE END #####
 --></body></html>

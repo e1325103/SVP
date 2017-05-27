@@ -44,9 +44,9 @@ end
 
 sampleOffset = 2;
 
-meanVector = determineMeanVector(streamlines);
+meanVector = mean(streamlines, 2);
 
-streamlines = determineMeanSubtracted(streamlines, meanVector);
+streamlines = streamlines - repmat(meanVector, 1, size(streamlines, 2));
 
 %% Calculate PCA Basis
 
@@ -64,7 +64,7 @@ if ~highNumberSamples
 else
     basis = eigenvectors;
 end
-reducedStreamlines = reduceData(basis, numBasis, streamlines, meanVector);
+reducedStreamlines = reduceData(basis, numBasis, streamlines);
 
 %% Cluster Reduced Streamlines with k-Means
 
@@ -110,7 +110,6 @@ for i = 1:numClusters
     end
 end
 
-
 percentCluster = zeros(numClusters, 1);
 countClusterTotal = size(lineIDs, 1);
 for i = 1:numClusters
@@ -120,10 +119,6 @@ end
 reconCenterLines = reconCenterLines';
 
 %% Calculate Boundary Region for the Sampled Lobes
-
-% hold off;
-% xlim([-40 60])
-% ylim([30 80])
 
 % for i = 1:numClusters
 %     I = zeros(1000, 1000, 'uint8');
@@ -147,9 +142,3 @@ reconCenterLines = reconCenterLines';
 %     y = y(k);
 %     eval(strcat('boundary', int2str(i), '=[x, y];'));
 % end
-% 
-% plot(boundary1(:, 1), boundary1(:, 2))
-% hold on
-% plot(boundary2(:, 1), boundary2(:, 2))
-% plot(boundary3(:, 1), boundary3(:, 2))
-% hold off
