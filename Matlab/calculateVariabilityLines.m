@@ -10,7 +10,7 @@
 
 %streamlines = A;
 %load('streamlines.mat');
-streamlines = connections';
+%streamlines = connections';
 % 
 % highNumberSamples = 1;
 
@@ -43,7 +43,7 @@ if(exist('convInter', 'var')~=1)
 end
 
 sampleOffset = 2;
-numSamples = 1000;
+numSamples = 30000;
 
 meanVector = determineMeanVector(streamlines);
 

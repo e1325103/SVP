@@ -65,8 +65,6 @@ namespace SVP
 
         private void buttonSimulate_Click(object sender, RoutedEventArgs e)
         {
-            lineCanvas.Children.Clear();
-
             if (textSeeds.Text.Trim() != "" && textSteps.Text.Trim() != "" && textDelta.Text.Trim() != "" && position != null && position2 != null)
             {
 
@@ -116,6 +114,21 @@ namespace SVP
             {
                 MessageBox.Show("Please enter all parameters and click twice for the rectangle!");
             }
+        }
+
+        private void clearCanvas()
+        {
+            borderCanvas.Children.Clear();
+            lineCanvas.Children.Clear();
+            centerCanvas.Children.Clear();
+
+            clusterCanvas1.Children.Clear();
+            clusterCanvas2.Children.Clear();
+            clusterCanvas3.Children.Clear();
+            clusterCanvas4.Children.Clear();
+            clusterCanvas5.Children.Clear();
+
+            barPanel.Children.Clear();
         }
     
 
@@ -225,8 +238,7 @@ namespace SVP
 
         private void buttonPreview_Click(object sender, RoutedEventArgs e)
         {
-            lineCanvas.Children.Clear();
-            borderCanvas.Children.Clear();
+            clearCanvas();
             
             vectorField = new VectorField(lineCanvas.ActualWidth);
             vectorField.import("D:\\WindData\\Entpackt");
@@ -248,6 +260,8 @@ namespace SVP
             buttonTravelSimulate.IsEnabled = false;
             textTravelClusters.IsEnabled = false;
             labelTravelClusters.IsEnabled = false;
+
+            buttonTravelCluster.IsEnabled = false;
         }
 
         private void radioStream_Checked(object sender, RoutedEventArgs e)
@@ -282,6 +296,15 @@ namespace SVP
 
         private void buttonTravelPreview_Click(object sender, RoutedEventArgs e)
         {
+            clearCanvas();
+
+            streamlineImage.Source = null;
+
+            textTime.IsEnabled = false;
+            labelTime.IsEnabled = false;
+
+            buttonCluster.IsEnabled = false;
+
             buttonSimulate.IsEnabled = false;
             textSeeds.IsEnabled = false;
             textSteps.IsEnabled = false;
