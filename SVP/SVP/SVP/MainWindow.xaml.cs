@@ -22,6 +22,7 @@ namespace SVP
     public partial class MainWindow : Window
     {
         bool first = true;
+        
         Vec2 position;
         Vec2 position2;
         VectorField vectorField;
@@ -40,6 +41,7 @@ namespace SVP
         int numClusters;
         float delta;
         float time;
+        float conf;
 
         public MainWindow()
         {
@@ -65,19 +67,23 @@ namespace SVP
 
         private void buttonSimulate_Click(object sender, RoutedEventArgs e)
         {
+            lineCanvas.Children.Clear();
+
+            clearClusterCanvas();
+
             if (textSeeds.Text.Trim() != "" && textSteps.Text.Trim() != "" && textDelta.Text.Trim() != "" && position != null && position2 != null)
             {
 
                 numSeeds = int.Parse(textSeeds.Text);
                 numSteps = int.Parse(textSteps.Text);
-                delta = float.Parse(textDelta.Text);
+                delta = float.Parse(textDelta.Text.Replace('.', ','));
                 time = 48 / numSteps;
-
+                
                 if ((bool)radioPath.IsChecked)
                 {
                     if (textTime.Text.Trim() != "")
                     {
-                        time = float.Parse(textTime.Text);
+                        time = float.Parse(textTime.Text.Replace('.', ','));
                     }
                 }
 
@@ -109,6 +115,8 @@ namespace SVP
                 buttonCluster.IsEnabled = true;
 
                 Util.numSteps = numSteps;
+
+                vectorField.freshySimulated = true;
             }
             else
             {
@@ -119,14 +127,20 @@ namespace SVP
         private void clearCanvas()
         {
             borderCanvas.Children.Clear();
-            lineCanvas.Children.Clear();
-            centerCanvas.Children.Clear();
+            lineCanvas.Children.Clear();                        
 
+            clearClusterCanvas();
+        }
+
+        private void clearClusterCanvas()
+        {
             clusterCanvas1.Children.Clear();
             clusterCanvas2.Children.Clear();
             clusterCanvas3.Children.Clear();
             clusterCanvas4.Children.Clear();
             clusterCanvas5.Children.Clear();
+
+            centerCanvas.Children.Clear();
 
             barPanel.Children.Clear();
         }
@@ -134,14 +148,32 @@ namespace SVP
 
         private void buttonCluster_Click(object sender, RoutedEventArgs e)
         {
-            cluster(vectorField);    
+            if (textConf.Text.Trim() != "" && textClusters.Text.Trim() != "")            {
+
+                numClusters = int.Parse(textClusters.Text);
+                conf = float.Parse(textConf.Text.Replace('.', ','));
+
+                if (numClusters > 0 && numClusters <= 5)
+                {
+                    cluster(vectorField);
+                }
+                else
+                {
+                    MessageBox.Show("Please enter at least 1 and max 5 clusters");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please enter all parameters!");
+            }
         }
 
         private void cluster(IClusterObject clusterObject)
         {
+            clearClusterCanvas();
+
             lineCanvas.Children.Clear();
-            barPanel.Children.Clear();
-            numClusters = int.Parse(textClusters.Text);
+            barPanel.Children.Clear();            
 
             executeMatlab(clusterObject);
 
@@ -168,7 +200,8 @@ namespace SVP
                 List<Line> lines = Util.getLines(clusterLines);
                 List<Line> transformedLines = clusterObject.transformLines(lines);              
 
-                Color color = Color.FromRgb(    Util.colors[i - 1, 0],
+                Color color = Color.FromArgb(   125, 
+                                                Util.colors[i - 1, 0],
                                                 Util.colors[i - 1, 1],
                                                 Util.colors[i - 1, 2]);
 
@@ -195,7 +228,12 @@ namespace SVP
         {
             clusterObject.executeMatlab(matlab);
 
-            matlab.Execute("numClusters = " + numClusters + ";");            
+            matlab.Execute("numClusters = " + numClusters + ";");
+
+            string ex = "convInter = " + conf + ";";
+
+            matlab.Execute(("convInter = " + conf + ";").Replace(',', '.'));
+
             matlab.Execute("calculateVariabilityLines");
         }
 
@@ -239,9 +277,11 @@ namespace SVP
         private void buttonPreview_Click(object sender, RoutedEventArgs e)
         {
             clearCanvas();
+
+            buttonCluster.IsEnabled = false;
             
             vectorField = new VectorField(lineCanvas.ActualWidth);
-            vectorField.import("D:\\WindData\\Entpackt");
+            vectorField.import();
             streamlineImage.Source = vectorField.createImage();
 
             buttonSimulate.IsEnabled = true;
@@ -262,6 +302,11 @@ namespace SVP
             labelTravelClusters.IsEnabled = false;
 
             buttonTravelCluster.IsEnabled = false;
+
+            textConf.IsEnabled = true;
+            labelConf.IsEnabled = true;
+            textTravelConf.IsEnabled = false;
+            labelTravelConf.IsEnabled = false;
         }
 
         private void radioStream_Checked(object sender, RoutedEventArgs e)
@@ -340,10 +385,17 @@ namespace SVP
             buttonTravelSimulate.IsEnabled = true;
             textTravelClusters.IsEnabled = true;
             labelTravelClusters.IsEnabled = true;
+
+            textConf.IsEnabled = false;
+            labelConf.IsEnabled = false;
+            textTravelConf.IsEnabled = true;
+            labelTravelConf.IsEnabled = true;
         }
 
         private void buttonTravelSimulate_Click(object sender, RoutedEventArgs e)
         {
+            clearClusterCanvas();
+
             matlab.Execute("simulateTravels;");
             
             matlab.Execute("connections(:, 1:2) = (connections(:, 1:2) + 20) * 14;");
@@ -369,10 +421,27 @@ namespace SVP
 
         private void buttonTravelCluster_Click(object sender, RoutedEventArgs e)
         {
-            numClusters = int.Parse(textTravelClusters.Text);
-
             centerCanvas.Children.Clear();
-            cluster(travel);           
+
+            if (textTravelConf.Text.Trim() != "" && textTravelClusters.Text.Trim() != "")
+            {
+
+                numClusters = int.Parse(textTravelClusters.Text);
+                conf = float.Parse(textTravelConf.Text.Replace('.', ','));
+
+                if (numClusters > 0 && numClusters <= 5)
+                {
+                    cluster(travel);
+                }
+                else
+                {
+                    MessageBox.Show("Please enter at least 1 and max 5 clusters");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please enter all parameters!");
+            }
         }
     }
 }

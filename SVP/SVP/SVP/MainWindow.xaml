@@ -63,13 +63,18 @@
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal">
+                        <Label x:Name="labelTime" Content="Time per Step: " Margin="6" Width="120" IsEnabled="False"/>
+                        <TextBox Height="23" Width="120" x:Name="textTime" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="0,048"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
                         <Label x:Name="labelClusters" Content="Number of Clusters: " Margin="6" Width="120" IsEnabled="False"/>
                         <TextBox Height="23" Width="120" x:Name="textClusters" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="4"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal">
-                        <Label x:Name="labelTime" Content="Time per Step: " Margin="6" Width="120" IsEnabled="False"/>
-                        <TextBox Height="23" Width="120" x:Name="textTime" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="0,1"/>
+                        <Label x:Name="labelConf" Content="Confidence Interval: " Margin="6" Width="120" IsEnabled="False"/>
+                        <TextBox Height="23" Width="120" x:Name="textConf" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="0,9"/>
                     </StackPanel>
 
                 </StackPanel>
@@ -86,6 +91,12 @@
                         <Label x:Name="labelTravelClusters" Content="Number of Clusters: " Margin="6" Width="120" IsEnabled="False"/>
                         <TextBox Height="23" Width="120" x:Name="textTravelClusters" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="4"/>
                     </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Label x:Name="labelTravelConf" Content="Confidence Interval: " Margin="6" Width="120" IsEnabled="False"/>
+                        <TextBox Height="23" Width="120" x:Name="textTravelConf" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="0,9"/>
+                    </StackPanel>
+
                 </StackPanel>
             </GroupBox>
 

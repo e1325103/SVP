@@ -10,7 +10,7 @@
 
 %streamlines = A;
 %load('streamlines.mat');
-%streamlines = connections';
+streamlines = connections';
 % 
 % highNumberSamples = 1;
 

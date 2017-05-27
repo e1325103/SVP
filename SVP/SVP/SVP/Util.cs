@@ -9,18 +9,37 @@ using System.Windows.Shapes;
 
 namespace SVP
 {
+    /// <summary>
+    /// This class offers several usefull functions like the conversion from lines to drawable polylines, the conversion of a streamline to a
+    /// format that is handed to matlab, the generation of coloured rectangles, showing how many lines lie in a specific cluster, a line generator
+    /// for the borders of the countries and other line operations.
+    /// </summary>
     public class Util
     {
+
+        /// <summary>
+        /// 5 different colours for the clusters
+        /// </summary>
         public static byte[,] colors = new byte[,] {  {255, 0, 0},
                                                 {0, 255, 0},
                                                 {0, 0, 255},
                                                 {255, 255, 0},
                                                 {0, 255, 255}};
 
+        /// <summary>
+        /// A double value showing, how much darker the streamline medians shall be plotted.
+        /// </summary>
         private static double darkerPercentage = 0.7;
 
         public static int numSteps { get; set; }
 
+        /// <summary>
+        /// This method converts several lines to drawable polylines by using the getPolyline function for each element.
+        /// </summary>
+        /// <param name="lines">The list of lines to be transformed</param>
+        /// <param name="color">The color the polylines shall be plotted with</param>
+        /// <param name="stroke">The stroke of the brush for the polylines</param>
+        /// <returns>A list of drawable polylines</returns>
         public static List<Polyline> getPolyLines(List<Line> lines, Color color, double stroke)
         {
             List<Polyline> polLines = new List<Polyline>();
@@ -33,6 +52,13 @@ namespace SVP
             return polLines;
         }
 
+        /// <summary>
+        /// This method converts a single line into a drawable polyline.
+        /// </summary>
+        /// <param name="line">The line to be transformed into a drawable polyline</param>
+        /// <param name="color">The color the polylines shall be plotted with</param>
+        /// <param name="stroke">The stroke of the brush for the polylines</param>
+        /// <returns>A drawable polyline</returns>
         public static Polyline getPolyLine(Line line, Color color, double stroke)
         {
             Polyline polLine = new Polyline();
@@ -51,6 +77,11 @@ namespace SVP
             return polLine;
         }
 
+        /// <summary>
+        /// This method converts a 2 dim double array handed by matlab into Lines.
+        /// </summary>
+        /// <param name="centerLines">The 2 dim double array containing lines</param>
+        /// <returns>A list of lines</returns>
         public static List<Line> getLines(double[,] centerLines)
         {
             List<Line> lines = new List<Line>();
@@ -75,6 +106,15 @@ namespace SVP
             return lines;
         }
 
+        /// <summary>
+        /// This method converts a list of lines into drawable polylines. The percentCluster shows, how many of the clustered streamlins are containd in the 
+        /// specific cluster. Each cluster has a percnetage in this array. If the plottet lines are median lines (if isCenter is true) the respective colour
+        /// of the cluster gets darkened.
+        /// </summary>
+        /// <param name="lines">The list of lines to be transformed to drawable polylines</param>
+        /// <param name="percentCluster">The array contaning a percentage value for each cluster saying, how many of the clustered streamlines lie within the cluster</param>
+        /// <param name="isCenter">The variable shows, if the lines are centerliens (medians) or not, if median => color gets darker</param>
+        /// <returns></returns>
         public static List<Polyline> getPolyLinesWithPercentage(List<Line> lines, double[] percentCluster, bool isCenter)
         {
             List<Polyline> polLines = new List<Polyline>();
@@ -98,29 +138,13 @@ namespace SVP
             return polLines;
         }
 
+        /// <summary>
+        /// This method transforms a line into a format that is handed to matlab.
+        /// </summary>
+        /// <param name="line">THe line to be transformed</param>
+        /// <returns>The respective matlab format of a line</returns>
         public static string getLineMatrix(Line line)
         {
-            /* double[,] lineArray = new double[numSteps * 2, numSeeds];
-
-             int currentSeed = 0;
-
-             foreach (Line line in lines)
-             {
-                 int currentStep = 0;
-
-                 foreach (Vec2 point in line.Points)
-                 {
-                     lineArray[currentStep, currentSeed] = point.X;
-                     lineArray[currentStep + numSteps, currentSeed] = point.Y;
-
-                     currentStep++;
-                 }
-
-                 currentSeed++;
-             }*/
-
-            // return lineArray;
-
             int columns = numSteps;
 
             int i = 0;
@@ -153,6 +177,12 @@ namespace SVP
             return returnString;
         }
 
+        /// <summary>
+        /// Matlab hands over 2 dim arrays even if the content is actually a 1 dim array. This function
+        /// converts the 2 dim array into a 1 dim one.
+        /// </summary>
+        /// <param name="array2D">The 2 dim array to be transformed</param>
+        /// <returns>The respective 1 dim array</returns>
         public static double[] Make1Dimensional(double[,] array2D)
         {
             double[] array1D = new double[array2D.GetLength(0)];
@@ -165,6 +195,16 @@ namespace SVP
             return array1D;
         }
 
+        /// <summary>
+        /// This method is used for ghe generation of rectangles for the stack panel on the right side of the image in the GUI, showing how many
+        /// of the clustered streamlines are contained in a specific cluster. The height of the rectangles is determined by this percentage
+        /// multiplied by the height of the stack panel. 
+        /// </summary>
+        /// <param name="numClusters">The number of Clusters</param>
+        /// <param name="percentCluster">The array contaning a percentage value for each cluster saying, how many of the clustered streamlines lie within the cluster</param>
+        /// <param name="width">The width of the stack panel</param>
+        /// <param name="height">The height of the stack panel</param>
+        /// <returns>An array containing the colored rectangles of each cluster</returns>
         public static Rectangle[] getRects(int numClusters, double[] percentCluster, double width, double height)
         {
             Rectangle[] rects = new Rectangle[percentCluster.Length];
@@ -186,6 +226,14 @@ namespace SVP
             return rects;
         }
 
+        /// <summary>
+        /// This method transforms
+        /// </summary>
+        /// <param name="coastlon"></param>
+        /// <param name="coastlat"></param>
+        /// <param name="color"></param>
+        /// <param name="stroke"></param>
+        /// <returns></returns>
         public static List<Polyline> getBorders(double[,] coastlon, double[,] coastlat, Color color, double stroke)
         {
             List<Polyline> borderLines = new List<Polyline>();
