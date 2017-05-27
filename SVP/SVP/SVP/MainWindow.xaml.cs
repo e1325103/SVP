@@ -17,7 +17,7 @@ using System.Windows.Shapes;
 namespace SVP
 {
     /// <summary>
-    /// Interaktionslogik für MainWindow.xaml
+    /// Interactionlogic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
@@ -43,6 +43,9 @@ namespace SVP
         float time;
         float conf;
 
+        /// <summary>
+        /// Constructor of the Mainwindow. The matlab connection and other variables get initialized. 
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
@@ -65,6 +68,13 @@ namespace SVP
             toPolylineConverter = new Util();
         }
 
+        /// <summary>
+        /// This method is called after the Simulate button for the hurricane dataset gets pressed. It reads the 
+        /// values of the textfields and starts the Runge Kutta Integration of stream- or pathlines depending on 
+        /// the selected radiobutton. The lines are then plotted on the background map of florida.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonSimulate_Click(object sender, RoutedEventArgs e)
         {
             lineCanvas.Children.Clear();
@@ -124,6 +134,9 @@ namespace SVP
             }
         }
 
+        /// <summary>
+        /// This methods clears the content of the canvas by clearing the children. (Canvas contain streamlines etc.)
+        /// </summary>
         private void clearCanvas()
         {
             borderCanvas.Children.Clear();
@@ -132,6 +145,9 @@ namespace SVP
             clearClusterCanvas();
         }
 
+        /// <summary>
+        /// This methods clears the content of the canvas of the clusters by clearing the children.
+        /// </summary>
         private void clearClusterCanvas()
         {
             clusterCanvas1.Children.Clear();
@@ -145,7 +161,11 @@ namespace SVP
             barPanel.Children.Clear();
         }
     
-
+        /// <summary>
+        /// This method is called after the Cluster button for the hurricane dataset gets pressed. It reads the values for the clustering and calls the function cluster.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonCluster_Click(object sender, RoutedEventArgs e)
         {
             if (textConf.Text.Trim() != "" && textClusters.Text.Trim() != "")            {
@@ -168,6 +188,12 @@ namespace SVP
             }
         }
 
+        /// <summary>
+        /// This method calls the matlab code, hands over the data to matlab and stores the results. Afterwards the
+        /// clusters and the centerlines/medians are plotted and the rectangles for the stackpanel showing, how many of 
+        /// the clustered streamlines are contained in the respective cluster.
+        /// </summary>
+        /// <param name="clusterObject">The object for the clustering (vectorfield, travel)</param>
         private void cluster(IClusterObject clusterObject)
         {
             clearClusterCanvas();
@@ -189,6 +215,11 @@ namespace SVP
             addRects(Util.getRects(numClusters, percentCluster, barPanel.ActualWidth, barPanel.ActualHeight));
         }
 
+        /// <summary>
+        /// This method plotts the lines of each cluster in the respective transparent color.
+        /// </summary>
+        /// <param name="percentCluster">The array contaning a percentage value for each cluster saying, how many of the clustered streamlines lie within the cluster</param>
+        /// <param name="clusterObject">The object for the clustering (vectorfield, travel)</param>
         private void drawClusters(double[] percentCluster, IClusterObject clusterObject)
         {
             for (int i = 1; i <= numClusters; i++)
@@ -216,6 +247,10 @@ namespace SVP
             }
         }        
 
+        /// <summary>
+        /// This function adds colored rectangles to a stackpanel showing how many of the clustered streamlines are contained in the respective cluster.
+        /// </summary>
+        /// <param name="rects">The array of rectangles that shall be added to the stackpanel</param>
         private void addRects(Rectangle[] rects)
         {
             foreach (Rectangle rect in rects)
@@ -224,6 +259,10 @@ namespace SVP
             }  
         }
 
+        /// <summary>
+        /// This method executes matlab codes and sets parameters for the clustering and starts the matlab script calculateVariabilityLines;
+        /// </summary>
+        /// <param name="clusterObject">The object for the clustering (vectorfield, travel)</param>
         private void executeMatlab(IClusterObject clusterObject)
         {
             clusterObject.executeMatlab(matlab);
@@ -237,6 +276,12 @@ namespace SVP
             matlab.Execute("calculateVariabilityLines");
         }
 
+        /// <summary>
+        /// This method draws the centerlines/medians of the clusters. The more of the cluster streamlines are contained in the cluster, the thicker the median gets plotted.
+        /// </summary>
+        /// <param name="centerLines">A double array of the center lines of the clusters handed by matlab</param>
+        /// <param name="percentCluster">The array contaning a percentage value for each cluster saying, how many of the clustered streamlines lie within the cluster</param>
+        /// <param name="clusterObject">The object for the clustering (vectorfield, travel)</param>
         private void drawCenterLines(double[,] centerLines, double[] percentCluster, IClusterObject clusterObject)
         {
             List<Line> cenLines = Util.getLines(centerLines);
@@ -251,7 +296,11 @@ namespace SVP
             }
         }      
 
-
+        /// <summary>
+        /// This method stores points via mouse clicks on the image, specifying a rectangle for the seedpoint generation for the streamlines.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void streamlineImage_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (first)
@@ -274,6 +323,12 @@ namespace SVP
             first = !first;
         }
 
+        /// <summary>
+        /// This method is called after the Load button for the hurricane dataset gets pressed. It initializes the
+        /// vector field and creates the green and blue background image showing florida and the sea.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonPreview_Click(object sender, RoutedEventArgs e)
         {
             clearCanvas();
@@ -309,6 +364,11 @@ namespace SVP
             labelTravelConf.IsEnabled = false;
         }
 
+        /// <summary>
+        /// This method disables the texfields and labels for pathlines.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void radioStream_Checked(object sender, RoutedEventArgs e)
         {
             if (radioStream != null && textTime != null && labelTime != null)
@@ -324,6 +384,11 @@ namespace SVP
             }
         }
 
+        /// <summary>
+        /// This method enables the texfields and labels for pathlines.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void radioPath_Checked(object sender, RoutedEventArgs e)
         {
             if (radioPath != null && textTime != null && labelTime != null)
@@ -339,6 +404,11 @@ namespace SVP
             }
         }
 
+        /// <summary>
+        /// This method is called after the Load button for the travel dataset gets pressed. It draws the borders of the contries.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonTravelPreview_Click(object sender, RoutedEventArgs e)
         {
             clearCanvas();
@@ -392,6 +462,11 @@ namespace SVP
             labelTravelConf.IsEnabled = true;
         }
 
+        /// <summary>
+        /// This method is called after the Simulate button for the travel dataset gets pressed. It calls the matlab script for the travel line generation and plotts them on the map.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonTravelSimulate_Click(object sender, RoutedEventArgs e)
         {
             clearClusterCanvas();
@@ -419,6 +494,11 @@ namespace SVP
             buttonTravelCluster.IsEnabled = true;
         }
 
+        /// <summary>
+        /// This method is called after the Cluster button for the coastlines/travel dataset gets pressed. It reads the values for the clustering and calls the function cluster.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonTravelCluster_Click(object sender, RoutedEventArgs e)
         {
             centerCanvas.Children.Clear();

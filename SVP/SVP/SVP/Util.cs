@@ -227,13 +227,13 @@ namespace SVP
         }
 
         /// <summary>
-        /// This method transforms
+        /// This method transforms the double array of the matlab coastlines dataset into drawable polyliens (border of the countries).
         /// </summary>
-        /// <param name="coastlon"></param>
-        /// <param name="coastlat"></param>
-        /// <param name="color"></param>
-        /// <param name="stroke"></param>
-        /// <returns></returns>
+        /// <param name="coastlon">The X-Values of the borders</param>
+        /// <param name="coastlat">The Y-Values of the borders</param>
+        /// <param name="color">The color for the polylines</param>
+        /// <param name="stroke">The stroke for the brush of the polylines</param>
+        /// <returns>The drawable polylines of the matlab coastlines dataset</returns>
         public static List<Polyline> getBorders(double[,] coastlon, double[,] coastlat, Color color, double stroke)
         {
             List<Polyline> borderLines = new List<Polyline>();
