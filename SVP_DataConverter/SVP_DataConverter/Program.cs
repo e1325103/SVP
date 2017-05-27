@@ -16,7 +16,8 @@ namespace SVP_DataConverter
 
         public static bool Convert(string path)
         {
-
+            StringBuilder textU = new StringBuilder();
+            StringBuilder textV = new StringBuilder();
             for (int i = 1; i <= 48; i++)
             {
                 string filename = i.ToString();
@@ -28,8 +29,6 @@ namespace SVP_DataConverter
                 {
                     using (BinaryReader vReader = new BinaryReader(new FileStream(path + "\\Vf" + filename + ".bin", FileMode.Open)))
                     {
-                        StringBuilder textU = new StringBuilder();
-                        StringBuilder textV = new StringBuilder();
                         for (int x = 0; x < 500; x++)
                         {
                             for (int y = 0; y < 500; y++)
@@ -54,11 +53,12 @@ namespace SVP_DataConverter
                             textV.Remove(textV.Length - 1, 1);
                             textV.Append(Environment.NewLine);
                         }
-                        File.WriteAllText("u.csv", textU.ToString());
-                        File.WriteAllText("v.csv", textU.ToString());
                     }
                 }
             }
+
+            File.WriteAllText("u.csv", textU.ToString());
+            File.WriteAllText("v.csv", textV.ToString());
 
             return true;
         }

@@ -145,8 +145,8 @@ namespace SVP
         public Vec2 generateSeedPoint()
         {            
             return new Vec2(
-                random.Next(((int)rectanglePos.X), ((int)rectanglePos2.X)),
-                random.Next(((int)rectanglePos.Y), ((int)rectanglePos2.Y))
+                random.Next(Math.Min(((int)rectanglePos.X), ((int)rectanglePos2.X)), Math.Max(((int)rectanglePos.X), ((int)rectanglePos2.X))),
+                random.Next(Math.Min(((int)rectanglePos.Y), ((int)rectanglePos2.Y)), Math.Max(((int)rectanglePos.Y), ((int)rectanglePos2.Y)))
             );
         }
 

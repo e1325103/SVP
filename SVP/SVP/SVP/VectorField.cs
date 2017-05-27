@@ -17,71 +17,82 @@ namespace SVP
     {
         private byte[] backgroundImage;
 
-        public int fieldSize = 500;        
+        public int fieldSize = 500;
 
         private double transform;
 
         private Vec2[, ,] field;
 
-        public List<Line> rungeLines {get; set;}
+        public List<Line> rungeLines { get; set; }
 
         public VectorField(double width)
         {
             transform = (width / (fieldSize * 2));
         }
 
-        public bool import(string path)
+        //public void import(string path)
+        //{
+
+        //    field = new Vec2[500, 500, 48];
+
+        //    for (int i = 1; i <= 48; i++)
+        //    {
+        //        string filename = i.ToString();
+        //        if (i < 10)
+        //        {
+        //            filename = "0" + filename;
+        //        }
+        //        using (BinaryReader uReader = new BinaryReader(new FileStream(path + "\\Uf" + filename + ".bin", FileMode.Open)))
+        //        {
+        //            using (BinaryReader vReader = new BinaryReader(new FileStream(path + "\\Vf" + filename + ".bin", FileMode.Open)))
+        //            {
+        //                for (int x = 0; x < 500; x++)
+        //                {
+        //                    for (int y = 0; y < 500; y++)
+        //                    {
+        //                        float x1 = swapFloat(uReader.ReadBytes(4));
+        //                        float y1 = swapFloat(vReader.ReadBytes(4));
+
+        //                        if (x1 > 2000)
+        //                        {
+        //                            x1 = 0;
+        //                        }
+
+        //                        if (y1 > 2000)
+        //                        {
+        //                            y1 = 0;
+        //                        }
+
+        //                        field[y, x, (i - 1)] = new Vec2(y1, x1 * -1);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
+
+        public void import(string path)
         {
 
             field = new Vec2[500, 500, 48];
-
-            for (int i = 1; i <= 48; i++)
+            using (StreamReader uReader = new StreamReader(new FileStream("u.csv", FileMode.Open)))
             {
-                string filename = i.ToString();
-                if (i < 10)
+                using (StreamReader vReader = new StreamReader(new FileStream("v.csv", FileMode.Open)))
                 {
-                    filename = "0" + filename;
-                }
-                using (BinaryReader uReader = new BinaryReader(new FileStream(path + "\\Uf" + filename + ".bin", FileMode.Open)))
-                {
-                    using (BinaryReader vReader = new BinaryReader(new FileStream(path + "\\Vf" + filename + ".bin", FileMode.Open)))
+                    for (int i = 0; i < 48; i++)
                     {
-                        for (int x = 0; x < 500; x++)
+                        for (int y = 0; y < 500; y++)
                         {
-                            for (int y = 0; y < 500; y++)
+                            string[] uParts = uReader.ReadLine().Split(';');
+                            string[] vParts = vReader.ReadLine().Split(';');
+                            for (int x = 0; x < 500; x++)
                             {
-                                float x1 = swapFloat(uReader.ReadBytes(4));
-                                float y1 = swapFloat(vReader.ReadBytes(4));
-
-                                if (x1 > 2000)
-                                {
-                                    x1 = 0;
-                                }
-
-                                if (y1 > 2000)
-                                {
-                                    y1 = 0;
-                                }
-
-                                field[y, x, (i - 1)] = new Vec2(y1, x1 * -1);
+                                field[x, y, i] = new Vec2(float.Parse(uParts[x]) * -1, float.Parse(vParts[x]) * -1);
                             }
                         }
                     }
                 }
             }
-
-            return true;
-        }
-
-        private float swapFloat(byte[] floatBytes)
-        {
-            byte temp = floatBytes[0];
-            floatBytes[0] = floatBytes[3];
-            floatBytes[3] = temp;
-            temp = floatBytes[1];
-            floatBytes[1] = floatBytes[2];
-            floatBytes[2] = temp;
-            return BitConverter.ToSingle(floatBytes, 0);
         }
 
         public BitmapSource createImage(float minValue, float maxValue)
@@ -124,7 +135,7 @@ namespace SVP
                 {
                     double x = (point.X - 1) * 2;
                     double y = (point.Y - 1) * 2;
-                    
+
 
                     if (x < 1000 && y < 1000 && x >= 0 && y >= 0)
                     {
@@ -228,8 +239,8 @@ namespace SVP
 
             int stride = 1000 * PixelFormats.Bgr32.BitsPerPixel / 8;
             return BitmapSource.Create(1000, 1000, 96, 96, PixelFormats.Bgr32, null, backgroundImage, stride);
-        }       
-        
+        }
+
         public List<Polyline> drawCluster(double[,] clusterLines, Color color, double stroke)
         {
             List<Line> lines = new List<Line>();
@@ -251,7 +262,7 @@ namespace SVP
                 lines.Add(line);
             }
 
-            return drawLines(lines, color, stroke);         
+            return drawLines(lines, color, stroke);
         }
 
         public List<Polyline> drawLines(List<Line> lines, Color color, double stroke)
