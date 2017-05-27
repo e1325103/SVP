@@ -116,7 +116,6 @@ namespace SVP
             {
                 MessageBox.Show("Please enter all parameters and click twice for the rectangle!");
             }
-
         }
     
 
@@ -306,40 +305,14 @@ namespace SVP
             double[,] coastlon = matlab.GetVariable("coastlon", "base");
 
             lineCanvas.Children.Clear();
+            borderCanvas.Children.Clear();
 
-            PointCollection pointCol = new PointCollection();
+            List<Polyline> borderLines = Util.getBorders(coastlon, coastlat, Colors.Black, 0.5);
 
-
-            for (int i = 0; i < coastlat.GetLength(0); i++)
+            foreach (Polyline borderLine in borderLines)
             {
-                double x = (coastlon[i, 0] + 20) * 14;
-                double y = (coastlat[i, 0] - 80) * 14;
-
-                if (double.IsNaN(x))
-                {
-                    Polyline polLine = new Polyline();
-                    polLine.Stroke = new SolidColorBrush(Colors.Black);
-                    polLine.StrokeThickness = 0.5;
-
-                    polLine.Points = pointCol;
-
-                    borderCanvas.Children.Add(polLine);
-
-                    pointCol = new PointCollection();
-                }
-                else
-                {
-                    pointCol.Add(new Point(x, y * -1));
-                }
+                borderCanvas.Children.Add(borderLine);
             }
-
-            Polyline lastPolLine = new Polyline();
-            lastPolLine.Stroke = new SolidColorBrush(Colors.Black);
-            lastPolLine.StrokeThickness = 0.5;
-
-            lastPolLine.Points = pointCol;
-
-            borderCanvas.Children.Add(lastPolLine);
 
             buttonTravelSimulate.IsEnabled = true;
             textTravelClusters.IsEnabled = true;
@@ -354,10 +327,7 @@ namespace SVP
             matlab.Execute("connections(:, 3:4) = (connections(:, 3:4) - 80) * -14;");
 
             double[,] travelLines = matlab.GetVariable("connections", "base");
-
-            //double x = (coastlon[i, 0] + 20) * 16;
-            //double y = (coastlat[i, 0] - 80) * 16;
-
+            
             List<Line> lines = Util.getLines(travelLines);
 
             travel.lines = lines;
@@ -379,7 +349,6 @@ namespace SVP
             numClusters = int.Parse(textTravelClusters.Text);
 
             centerCanvas.Children.Clear();
-
             cluster(travel);           
         }
     }

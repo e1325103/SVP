@@ -185,5 +185,44 @@ namespace SVP
 
             return rects;
         }
+
+        public static List<Polyline> getBorders(double[,] coastlon, double[,] coastlat, Color color, double stroke)
+        {
+            List<Polyline> borderLines = new List<Polyline>();
+
+            PointCollection pointCol = new PointCollection();
+
+            for (int i = 0; i < coastlat.GetLength(0); i++)
+            {
+                double x = (coastlon[i, 0] + 20) * 14;
+                double y = (coastlat[i, 0] - 80) * 14;
+
+                if (double.IsNaN(x))
+                {
+                    Polyline polLine = new Polyline();
+                    polLine.Stroke = new SolidColorBrush(color);
+                    polLine.StrokeThickness = stroke;
+
+                    polLine.Points = pointCol;
+
+                    borderLines.Add(polLine);
+
+                    pointCol = new PointCollection();
+                }
+                else
+                {
+                    pointCol.Add(new Point(x, y * -1));
+                }
+            }
+
+            Polyline lastPolLine = new Polyline();
+            lastPolLine.Stroke = new SolidColorBrush(color);
+            lastPolLine.StrokeThickness = stroke;
+            lastPolLine.Points = pointCol;
+
+            borderLines.Add(lastPolLine);
+
+            return borderLines;
+        }
     }
 }
