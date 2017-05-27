@@ -230,7 +230,7 @@ namespace SVP
             borderCanvas.Children.Clear();
             
             vectorField = new VectorField(lineCanvas.ActualWidth);
-            vectorField.import("D:\\WindData\\Entpackt");
+            vectorField.import("D:\\WindData");
             streamlineImage.Source = vectorField.createImage();
 
             buttonSimulate.IsEnabled = true;

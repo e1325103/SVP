@@ -10,7 +10,7 @@
 
 %streamlines = A;
 %load('streamlines.mat');
-% streamlines = connections';
+streamlines = connections';
 % 
 % highNumberSamples = 1;
 
@@ -43,7 +43,7 @@ if(exist('convInter', 'var')~=1)
 end
 
 sampleOffset = 2;
-numSamples = 30000;
+numSamples = 1000;
 
 meanVector = determineMeanVector(streamlines);
 
@@ -161,3 +161,32 @@ reconCenterLines = reconCenterLines';
 % hold off;
 % xlim([-40 60])
 % ylim([30 80])
+
+% for i = 1:numClusters
+%     I = zeros(1000, 1000, 'uint8');
+%     eval(strcat('sampleStreamlines=sampleStreamlines', int2str(i), ';'));
+%     for r = sampleStreamlines'
+%         for c = 1:((size(r) / 2) - 1)
+%             x = [r(c) r(c + 1)] * 2.5 + 250;
+%             y = [r(pXMin + c - 1) r(pXMin + c)] * 2.5+250;
+%             nPoints = max(abs(diff(x)), abs(diff(y)))+1;
+%             rIndex = round(linspace(y(1), y(2), nPoints));
+%             cIndex = round(linspace(x(1), x(2), nPoints));
+%             index = sub2ind(size(I), rIndex, cIndex);
+%             I(index) = 255; 
+%         end
+%     end
+%     se = strel('square',2);
+%     I = imdilate(I, se);
+%     [x, y] = find(I);
+%     k = boundary(x, y, 0.2);
+%     x = x(k);
+%     y = y(k);
+%     eval(strcat('boundary', int2str(i), '=[x, y];'));
+% end
+% 
+% plot(boundary1(:, 1), boundary1(:, 2))
+% hold on
+% plot(boundary2(:, 1), boundary2(:, 2))
+% plot(boundary3(:, 1), boundary3(:, 2))
+% hold off
