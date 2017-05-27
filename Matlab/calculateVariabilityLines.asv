@@ -8,11 +8,11 @@
 %
 % * *connections* m*n matrix with m data points (x-, y-coordinates) and n streamlines
 % * *numClusters* Number of generated clusters _Default: 3_
-% * *numBasis* Number of basis used for the reconstruction _Default: 3_
-% * *convInter* Convidence intervall of the variability lines _Default: 0.9_
+% * *numBasis* Number of basis used for the reconstruction
+% * *convInter* Convidence intervall of the variability lines
 % * *highNumberSamples* 0 =  if more data points than streamlines; 1 = if
-% more streamlines than samples (use transpose trick) _Default: 0_
-% * *numSamples* Number of samples per cluster _Default: 30000_
+% more streamlines than samples (use transpose trick)
+% * *numSamples* Number of samples per cluster
 
 pYMin = 1;
 pYMax = (size(streamlines, 1) / 2);
@@ -48,7 +48,7 @@ meanVector = determineMeanVector(streamlines);
 
 streamlines = determineMeanSubtracted(streamlines, meanVector);
 
-%% Calculate PCA Basis
+%% 
 
 if ~highNumberSamples
 	[eigenvectors, eigenvalues] = eig(streamlines' * streamlines, 'vector');
@@ -57,7 +57,7 @@ else
 end
 [eigenvectors, eigenvalues] = eigsort(eigenvectors, eigenvalues);
 
-%% Reduce Streamlines
+%% 
 
 if ~highNumberSamples
 	basis = determineBasis(streamlines, eigenvectors);
@@ -66,11 +66,11 @@ else
 end
 reducedStreamlines = reduceData(basis, numBasis, streamlines, meanVector);
 
-%% Cluster Reduced Streamlines with k-Means
+%% 
 
 lineIDs = kmeans(reducedStreamlines', numClusters);
 
-%% Calculate the Median Streamline for each Cluster
+%% 
 
 centerLines = zeros(numClusters, numBasis);
 
@@ -82,14 +82,9 @@ end
 reconStreamlines = reconstructData(basis, numBasis, reducedStreamlines, meanVector);
 reconCenterLines = reconstructData(basis, numBasis, centerLines', meanVector);
 
-%% Uniformly Sample each Cluster's Convidence Lobe
-% The region around all clusters is sampled using the Monte-Carlo Method.
-% The points in a rectengular region are randomly chosen and only those who
-% lie with in the bounds of the convidence elipsoid get chosen. To check if
-% a point lies with the multidimensional elipsoid its Mahalanobis distance
-% is calculated and compared against a threshold.
+%% 
 
-threshold = sqrt(chi2inv(convInter, numBasis));
+threshold = sqrt(chi2inv(convInter,2));
 
 for i = 1:numClusters
     gridStreamlines = reducedStreamlines(:,lineIDs == i);
@@ -118,8 +113,6 @@ for i = 1:numClusters
     eval(strcat('percentCluster(', int2str(i), ')=sum(lineIDs == ', int2str(i), ') / countClusterTotal;'));
 end
 reconCenterLines = reconCenterLines';
-
-%% Calculate Boundary Region for the Sampled Lobes
 
 % hold off;
 % xlim([-40 60])
