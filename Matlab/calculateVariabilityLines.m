@@ -10,9 +10,9 @@
 
 %streamlines = A;
 %load('streamlines.mat');
-%streamlines = connections';
-
-%highNumberSamples = 0;
+% streamlines = connections';
+% 
+% highNumberSamples = 1;
 
 pYMin = 1;
 pYMax = (size(streamlines, 1) / 2);
@@ -70,6 +70,8 @@ end
 reducedStreamlines = reduceData(basis, numBasis, streamlines, meanVector);
 
 lineIDs = kmeans(reducedStreamlines', numClusters);
+% lineIDs = clusterdata(reducedStreamlines', 'maxclust', numClusters, 'distance', 'euclidean', 'linkage', 'average')';
+% dendrogram(linkage(reducedStreamlines', 'average'),'Orientation','left','ColorThreshold',14);
 
 centerLines = zeros(numClusters, numBasis);
 
@@ -141,9 +143,10 @@ end
 %hold off;
 
 %subplot(3, 2, 6);
-%figure;
-%hold on;
-reconCenterLines = reconCenterLines';
+% figure;
+% hold on;
+% load coastlines;
+% plot(coastlon, coastlat);
 percentCluster = zeros(numClusters, 1);
 countClusterTotal = size(lineIDs, 1);
 for i = 1:numClusters
@@ -152,5 +155,9 @@ for i = 1:numClusters
     eval(strcat('sampleStreamlines', int2str(i), '=', 'sampleStreamlines', int2str(i), '''', ';'));
     eval(strcat('percentCluster(', int2str(i), ')=sum(lineIDs == ', int2str(i), ') / countClusterTotal;'));
 end
-%plot(reconCenterLines(pYMin:pYMax, :), reconCenterLines(pXMin:pXMax, :), 'black', 'linewidth', 2);
-%hold off;
+
+% plot(reconCenterLines(pYMin:pYMax, :), reconCenterLines(pXMin:pXMax, :), 'black', 'linewidth', 2);
+reconCenterLines = reconCenterLines';
+% hold off;
+% xlim([-40 60])
+% ylim([30 80])
