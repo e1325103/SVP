@@ -234,7 +234,7 @@ namespace SVP
                                                 Util.colors[i - 1, 1],
                                                 Util.colors[i - 1, 2]);
 
-                List<Polyline> polyLines = Util.getPolyLines(boundaryLine, color, 4);
+                List<Polyline> polyLines = Util.getPolyLines(boundaryLine, color, 2);
                 polyLines.First().Fill = new SolidColorBrush(color);
 
                 clusterCanvas[i - 1].Children.Add(polyLines.First());
