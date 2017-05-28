@@ -38,10 +38,14 @@ namespace SVP
 
         int numSeeds;
         int numSteps;
+        int numBasis;
+        int numSamples;
         int numClusters;
         float delta;
         float time;
         float conf;
+        int sizeSplats;
+        float boundaryCoeff;
 
         /// <summary>
         /// Constructor of the Mainwindow. The matlab connection and other variables get initialized. 
@@ -68,6 +72,24 @@ namespace SVP
             toPolylineConverter = new Util();
         }
 
+        private void SetClusterFieldsEnabled(bool enabled)
+        {
+            this.textBasis.IsEnabled = enabled;
+            this.labelBasis.IsEnabled = enabled;
+            this.textBoundary.IsEnabled = enabled;
+            this.labelBoundary.IsEnabled = enabled;
+            this.textClusters.IsEnabled = enabled;
+            this.labelClusters.IsEnabled = enabled;
+            this.textSamples.IsEnabled = enabled;
+            this.labelSamples.IsEnabled = enabled;
+            this.textSplats.IsEnabled = enabled;
+            this.labelSplat.IsEnabled = enabled;
+            this.textConf.IsEnabled = enabled;
+            this.labelConf.IsEnabled = enabled;
+            this.labelClusters.IsEnabled = enabled;
+            this.buttonCluster.IsEnabled = enabled;
+        }
+
         /// <summary>
         /// This method is called after the Simulate button for the hurricane dataset gets pressed. It reads the 
         /// values of the textfields and starts the Runge Kutta Integration of stream- or pathlines depending on 
@@ -83,7 +105,6 @@ namespace SVP
 
             if (textSeeds.Text.Trim() != "" && textSteps.Text.Trim() != "" && textDelta.Text.Trim() != "" && position != null && position2 != null)
             {
-
                 numSeeds = int.Parse(textSeeds.Text);
                 numSteps = int.Parse(textSteps.Text);
                 delta = float.Parse(textDelta.Text.Replace('.', ','));
@@ -122,7 +143,7 @@ namespace SVP
                     Canvas.SetLeft(polLine, 0);
                 }
 
-                buttonCluster.IsEnabled = true;
+                SetClusterFieldsEnabled(true);
 
                 Util.numSteps = numSteps;
 
@@ -168,15 +189,25 @@ namespace SVP
         /// <param name="e"></param>
         private void buttonCluster_Click(object sender, RoutedEventArgs e)
         {
-            if (textConf.Text.Trim() != "" && textClusters.Text.Trim() != "")
+            if (textConf.Text.Trim() != "" && textClusters.Text.Trim() != "" && textBasis.Text.Trim() != "" && textSamples.Text.Trim() != "" && textSplats.Text.Trim() != "" && textBoundary.Text.Trim() != "")
             {
-
+                numBasis = int.Parse(textBasis.Text);
+                numSamples = int.Parse(textSamples.Text);
                 numClusters = int.Parse(textClusters.Text);
                 conf = float.Parse(textConf.Text.Replace('.', ','));
+                sizeSplats = int.Parse(textSplats.Text);
+                boundaryCoeff = float.Parse(textBoundary.Text.Replace('.', ','));
 
                 if (numClusters > 0 && numClusters <= 5)
                 {
-                    cluster(vectorField);
+                    if (buttonSimulate.IsEnabled)
+                    {
+                        cluster(vectorField);
+                    }
+                    else if (buttonTravelSimulate.IsEnabled)
+                    {
+                        cluster(travel);
+                    }
                 }
                 else
                 {
@@ -187,6 +218,7 @@ namespace SVP
             {
                 MessageBox.Show("Please enter all parameters!");
             }
+            //centerCanvas.Children.Clear();
         }
 
         /// <summary>
@@ -240,27 +272,6 @@ namespace SVP
                 clusterCanvas[i - 1].Children.Add(polyLines.First());
                 Canvas.SetTop(polyLines.First(), 0);
                 Canvas.SetLeft(polyLines.First(), 0);
-
-                //double[,] clusterLines = matlab.GetVariable("sampleStreamlines" + i, "base");
-
-                //double percent = percentCluster[i - 1];
-
-                //List<Line> lines = Util.getLines(clusterLines);
-                //List<Line> transformedLines = clusterObject.transformLines(lines);              
-
-                //Color color = Color.FromArgb(   125, 
-                //                                Util.colors[i - 1, 0],
-                //                                Util.colors[i - 1, 1],
-                //                                Util.colors[i - 1, 2]);
-
-                //List<Polyline> polyLines = Util.getPolyLines(transformedLines, color, 4);
-
-                //foreach (Polyline polLine in polyLines)
-                //{
-                //    clusterCanvas[i - 1].Children.Add(polLine);
-                //    Canvas.SetTop(polLine, 0);
-                //    Canvas.SetLeft(polLine, 0);
-                //}
             }
         }
 
@@ -284,11 +295,13 @@ namespace SVP
         {
             clusterObject.executeMatlab(matlab);
 
+            matlab.Execute("numBasis = " + numBasis + ";");
+            matlab.Execute("numSamples = " + numSamples + ";");
             matlab.Execute("numClusters = " + numClusters + ";");
-
-            string ex = "convInter = " + conf + ";";
+            matlab.Execute("splatSize = " + sizeSplats + ";");
 
             matlab.Execute(("convInter = " + conf + ";").Replace(',', '.'));
+            matlab.Execute(("boundCoeff = " + boundaryCoeff + ";").Replace(',', '.'));
 
             matlab.Execute("calculateVariabilityLinesPar");
         }
@@ -370,15 +383,7 @@ namespace SVP
             radioStream.IsEnabled = true;
 
             buttonTravelSimulate.IsEnabled = false;
-            textTravelClusters.IsEnabled = false;
-            labelTravelClusters.IsEnabled = false;
-
-            buttonTravelCluster.IsEnabled = false;
-
-            textConf.IsEnabled = true;
-            labelConf.IsEnabled = true;
-            textTravelConf.IsEnabled = false;
-            labelTravelConf.IsEnabled = false;
+            SetClusterFieldsEnabled(false);
         }
 
         /// <summary>
@@ -470,13 +475,7 @@ namespace SVP
             }
 
             buttonTravelSimulate.IsEnabled = true;
-            textTravelClusters.IsEnabled = true;
-            labelTravelClusters.IsEnabled = true;
-
-            textConf.IsEnabled = false;
-            labelConf.IsEnabled = false;
-            textTravelConf.IsEnabled = true;
-            labelTravelConf.IsEnabled = true;
+            SetClusterFieldsEnabled(false);
         }
 
         /// <summary>
@@ -508,7 +507,7 @@ namespace SVP
                 Canvas.SetLeft(line, 0);
             }
 
-            buttonTravelCluster.IsEnabled = true;
+            SetClusterFieldsEnabled(true);
         }
 
         /// <summary>
@@ -518,27 +517,6 @@ namespace SVP
         /// <param name="e"></param>
         private void buttonTravelCluster_Click(object sender, RoutedEventArgs e)
         {
-            centerCanvas.Children.Clear();
-
-            if (textTravelConf.Text.Trim() != "" && textTravelClusters.Text.Trim() != "")
-            {
-
-                numClusters = int.Parse(textTravelClusters.Text);
-                conf = float.Parse(textTravelConf.Text.Replace('.', ','));
-
-                if (numClusters > 0 && numClusters <= 5)
-                {
-                    cluster(travel);
-                }
-                else
-                {
-                    MessageBox.Show("Please enter at least 1 and max 5 clusters");
-                }
-            }
-            else
-            {
-                MessageBox.Show("Please enter all parameters!");
-            }
         }
     }
 }

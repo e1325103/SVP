@@ -22,7 +22,15 @@ pYMax = (size(streamlines, 1) / 2);
 pXMin  = pYMax + 1;
 pXMax = size(streamlines, 1);
 colors = 'rbgycm';
+    
+if(exist('boundCoeff', 'var')~=1)
+    boundCoeff = 0.7;
+end  
 
+if(exist('splatSize', 'var')~=1)
+    splatSize = 10;
+end
+    
 if(exist('numClusters', 'var')~=1)
     numClusters = 3;
 end
@@ -131,13 +139,6 @@ parfor i = 1:numClusters
             index = sub2ind(size(I), rIndex, cIndex);
             I(index) = 255; 
         end
-    end
-    if highNumberSamples
-        boundCoeff = 0;
-        splatSize = 2;
-    else
-        boundCoeff = 0.7;
-        splatSize = 10;
     end
     se = strel('disk', splatSize);
     I = imdilate(I, se);
