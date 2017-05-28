@@ -22,7 +22,7 @@ namespace SVP
     public partial class MainWindow : Window
     {
         bool first = true;
-        
+
         Vec2 position;
         Vec2 position2;
         VectorField vectorField;
@@ -35,7 +35,7 @@ namespace SVP
         Canvas[] clusterCanvas;
 
         MLApp.MLApp matlab;
-        
+
         int numSeeds;
         int numSteps;
         int numClusters;
@@ -62,7 +62,7 @@ namespace SVP
 
             current = "cd '" + current.Substring(0, current.IndexOf("SVP")) + "Matlab'";
             matlab.Execute(current);
-            
+
             travel = new Travel();
 
             toPolylineConverter = new Util();
@@ -88,7 +88,7 @@ namespace SVP
                 numSteps = int.Parse(textSteps.Text);
                 delta = float.Parse(textDelta.Text.Replace('.', ','));
                 time = 48 / numSteps;
-                
+
                 if ((bool)radioPath.IsChecked)
                 {
                     if (textTime.Text.Trim() != "")
@@ -140,7 +140,7 @@ namespace SVP
         private void clearCanvas()
         {
             borderCanvas.Children.Clear();
-            lineCanvas.Children.Clear();                        
+            lineCanvas.Children.Clear();
 
             clearClusterCanvas();
         }
@@ -160,7 +160,7 @@ namespace SVP
 
             barPanel.Children.Clear();
         }
-    
+
         /// <summary>
         /// This method is called after the Cluster button for the hurricane dataset gets pressed. It reads the values for the clustering and calls the function cluster.
         /// </summary>
@@ -168,7 +168,8 @@ namespace SVP
         /// <param name="e"></param>
         private void buttonCluster_Click(object sender, RoutedEventArgs e)
         {
-            if (textConf.Text.Trim() != "" && textClusters.Text.Trim() != "")            {
+            if (textConf.Text.Trim() != "" && textClusters.Text.Trim() != "")
+            {
 
                 numClusters = int.Parse(textClusters.Text);
                 conf = float.Parse(textConf.Text.Replace('.', ','));
@@ -199,13 +200,12 @@ namespace SVP
             clearClusterCanvas();
 
             lineCanvas.Children.Clear();
-            barPanel.Children.Clear();            
+            barPanel.Children.Clear();
 
             executeMatlab(clusterObject);
 
             double[,] centerLines = matlab.GetVariable("reconCenterLines", "base");
             double[,] percentCluster2D = matlab.GetVariable("percentCluster", "base");
-            double countClusterTotal = matlab.GetVariable("countClusterTotal", "base");
             double[] percentCluster = Util.Make1Dimensional(percentCluster2D);
 
             drawClusters(percentCluster, clusterObject);
@@ -224,28 +224,45 @@ namespace SVP
         {
             for (int i = 1; i <= numClusters; i++)
             {
-                double[,] clusterLines = matlab.GetVariable("sampleStreamlines" + i, "base");
+                double[,] clusterBoundary = matlab.GetVariable("boundary" + i, "base");
 
-                double percent = percentCluster[i - 1];
+                List<Line> boundaryLine = Util.getLines(clusterBoundary);
+                boundaryLine = clusterObject.transformLines(boundaryLine);
 
-                List<Line> lines = Util.getLines(clusterLines);
-                List<Line> transformedLines = clusterObject.transformLines(lines);              
-
-                Color color = Color.FromArgb(   125, 
+                Color color = Color.FromArgb(125,
                                                 Util.colors[i - 1, 0],
                                                 Util.colors[i - 1, 1],
                                                 Util.colors[i - 1, 2]);
 
-                List<Polyline> polyLines = Util.getPolyLines(transformedLines, color, 4);
+                List<Polyline> polyLines = Util.getPolyLines(boundaryLine, color, 4);
+                polyLines.First().Fill = new SolidColorBrush(color);
 
-                foreach (Polyline polLine in polyLines)
-                {
-                    clusterCanvas[i - 1].Children.Add(polLine);
-                    Canvas.SetTop(polLine, 0);
-                    Canvas.SetLeft(polLine, 0);
-                }
+                clusterCanvas[i - 1].Children.Add(polyLines.First());
+                Canvas.SetTop(polyLines.First(), 0);
+                Canvas.SetLeft(polyLines.First(), 0);
+
+                //double[,] clusterLines = matlab.GetVariable("sampleStreamlines" + i, "base");
+
+                //double percent = percentCluster[i - 1];
+
+                //List<Line> lines = Util.getLines(clusterLines);
+                //List<Line> transformedLines = clusterObject.transformLines(lines);              
+
+                //Color color = Color.FromArgb(   125, 
+                //                                Util.colors[i - 1, 0],
+                //                                Util.colors[i - 1, 1],
+                //                                Util.colors[i - 1, 2]);
+
+                //List<Polyline> polyLines = Util.getPolyLines(transformedLines, color, 4);
+
+                //foreach (Polyline polLine in polyLines)
+                //{
+                //    clusterCanvas[i - 1].Children.Add(polLine);
+                //    Canvas.SetTop(polLine, 0);
+                //    Canvas.SetLeft(polLine, 0);
+                //}
             }
-        }        
+        }
 
         /// <summary>
         /// This function adds colored rectangles to a stackpanel showing how many of the clustered streamlines are contained in the respective cluster.
@@ -256,7 +273,7 @@ namespace SVP
             foreach (Rectangle rect in rects)
             {
                 barPanel.Children.Add(rect);
-            }  
+            }
         }
 
         /// <summary>
@@ -273,7 +290,7 @@ namespace SVP
 
             matlab.Execute(("convInter = " + conf + ";").Replace(',', '.'));
 
-            matlab.Execute("calculateVariabilityLines");
+            matlab.Execute("calculateVariabilityLinesPar");
         }
 
         /// <summary>
@@ -294,7 +311,7 @@ namespace SVP
                 Canvas.SetTop(polCenter, 0);
                 Canvas.SetLeft(polCenter, 0);
             }
-        }      
+        }
 
         /// <summary>
         /// This method stores points via mouse clicks on the image, specifying a rectangle for the seedpoint generation for the streamlines.
@@ -334,7 +351,7 @@ namespace SVP
             clearCanvas();
 
             buttonCluster.IsEnabled = false;
-            
+
             vectorField = new VectorField(lineCanvas.ActualWidth);
             vectorField.import();
             streamlineImage.Source = vectorField.createImage();
@@ -472,12 +489,12 @@ namespace SVP
             clearClusterCanvas();
 
             matlab.Execute("simulateTravels;");
-            
+
             matlab.Execute("connections(:, 1:2) = (connections(:, 1:2) + 20) * 14;");
             matlab.Execute("connections(:, 3:4) = (connections(:, 3:4) - 80) * -14;");
 
             double[,] travelLines = matlab.GetVariable("connections", "base");
-            
+
             List<Line> lines = Util.getLines(travelLines);
 
             travel.lines = lines;

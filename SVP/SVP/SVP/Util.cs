@@ -141,7 +141,7 @@ namespace SVP
         /// <summary>
         /// This method transforms a line into a format that is handed to matlab.
         /// </summary>
-        /// <param name="line">THe line to be transformed</param>
+        /// <param name="line">The line to be transformed</param>
         /// <returns>The respective matlab format of a line</returns>
         public static string getLineMatrix(Line line)
         {

@@ -52,9 +52,7 @@ namespace SVP
         {
             matlab.Execute("highNumberSamples = 1;");
 
-            matlab.Execute("streamlines = connections;");
-
-            matlab.Execute("streamlines = streamlines';");
+            matlab.Execute("streamlines = connections';");
         }
 
         /// <summary>
