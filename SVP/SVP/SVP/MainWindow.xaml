@@ -1,16 +1,30 @@
 ﻿<Window x:Class="SVP.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Streamline Variability Plots" Height="894" Width="1181"
+        Title="Streamline Variability Plots" Height="894" Width="1200"
         Icon="Logo.png" ResizeMode="NoResize" Left="200px" Top="70px">
+    
+    <Window.Resources>
+        <Style TargetType="GroupBox">
+            <Setter Property="HeaderTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" FontSize="12"/>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    
     <Grid Name="rootGrid">
+          
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="40" />
-            <ColumnDefinition Width="270px" />
+            <ColumnDefinition Width="290px" />
         </Grid.ColumnDefinitions>
         <Image Name="streamlineImage" Grid.Row="0" Grid.Column="0" MouseLeftButtonUp="streamlineImage_MouseLeftButtonUp" />
 
@@ -23,7 +37,7 @@
         <Canvas Name="clusterCanvas4" Grid.Row="0" Grid.Column="0" Opacity="0.5" ClipToBounds="True"/>
         <Canvas Name="clusterCanvas5" Grid.Row="0" Grid.Column="0" Opacity="0.5" ClipToBounds="True"/>
 
-        <Canvas Name="centerCanvas" Grid.Row="0" Grid.Column="0" Opacity="0.8" ClipToBounds="True"/>
+        <Canvas Name="centerCanvas" Grid.Row="0" Grid.Column="0" Opacity="0.8" ClipToBounds="True" Grid.ColumnSpan="2" Margin="1,0,39,0"/>
 
 
         <!--<Canvas Name="barCanvas" Grid.Column="1" />-->
@@ -37,12 +51,15 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
+                <RowDefinition Height="800px" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <StackPanel Grid.Column="0" Grid.ColumnSpan="1">
-                <GroupBox Header="Dataset" >
-                    <StackPanel Orientation="Vertical">
+                <!--<GroupBox Header="Dataset">   -->
+
+                <Label Content="Datasets Load - Simulate" FontSize="18"></Label>
+                
+                    <StackPanel Orientation="Vertical" Margin="0,0,6,0">
                         <GroupBox Header="Hurricane">
 
                             <StackPanel Width="264">
@@ -83,7 +100,7 @@
                                 <Button x:Name="buttonTravelPreview" Margin="6px" Content="Load" Click="buttonTravelPreview_Click"/>
                                 <Button x:Name="buttonTravelSimulate" IsEnabled="False" Margin="6px" Content="Simulate" Click="buttonTravelSimulate_Click"/>
                                 <!--<Button x:Name="buttonTravelCluster" IsEnabled="False" Margin="6px" Content="Cluster" Click="buttonTravelCluster_Click"/>-->
-                                <Button Visibility="Hidden" Margin="6px"/>
+                                
 
                                 <!--<StackPanel Orientation="Horizontal">
                                 <Label x:Name="labelTravelClusters" Content="Number of Clusters: " Margin="6" Width="120" IsEnabled="False"/>
@@ -98,42 +115,43 @@
                             </StackPanel>
                         </GroupBox>
                     </StackPanel>
-                </GroupBox>
-            </StackPanel>
-            <GroupBox Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Header="Cluster">
+                <!--</GroupBox> -->
+
+                <Label Content="Cluster" FontSize="18" Margin="0,20,0,0"></Label>
                 <StackPanel Orientation="Vertical">
-                    <StackPanel Orientation="Horizontal">
-                        <Label x:Name="labelBasis" Content="Number of Basis: " Margin="6" Width="120" IsEnabled="False"/>
-                        <TextBox Height="23" Width="120" x:Name="textBasis" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="3"/>
-                    </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label x:Name="labelBasis" Content="Number of Basis: " Margin="6" Width="120" IsEnabled="False"/>
+                            <TextBox Height="23" Width="120" x:Name="textBasis" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="3"/>
+                        </StackPanel>
 
-                    <StackPanel Orientation="Horizontal">
-                        <Label x:Name="labelSamples" Content="Number of Samples: " Margin="6" Width="120" IsEnabled="False"/>
-                        <TextBox Height="23" Width="120" x:Name="textSamples" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="1000"/>
-                    </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label x:Name="labelSamples" Content="Number of Samples: " Margin="6" Width="120" IsEnabled="False"/>
+                            <TextBox Height="23" Width="120" x:Name="textSamples" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="1000"/>
+                        </StackPanel>
 
-                    <StackPanel Orientation="Horizontal">
-                        <Label x:Name="labelClusters" Content="Number of Clusters: " Margin="6" Width="120" IsEnabled="False"/>
-                        <TextBox Height="23" Width="120" x:Name="textClusters" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="4"/>
-                    </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label x:Name="labelClusters" Content="Number of Clusters: " Margin="6" Width="120" IsEnabled="False"/>
+                            <TextBox Height="23" Width="120" x:Name="textClusters" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="4"/>
+                        </StackPanel>
 
-                    <StackPanel Orientation="Horizontal">
-                        <Label x:Name="labelConf" Content="Confidence Interval: " Margin="6" Width="120" IsEnabled="False"/>
-                        <TextBox Height="23" Width="120" x:Name="textConf" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="0,9"/>
-                    </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label x:Name="labelConf" Content="Confidence Interval: " Margin="6" Width="120" IsEnabled="False"/>
+                            <TextBox Height="23" Width="120" x:Name="textConf" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="0,9"/>
+                        </StackPanel>
 
-                    <StackPanel Orientation="Horizontal">
-                        <Label x:Name="labelSplat" Content="Size of Splats: " Margin="6" Width="120" IsEnabled="False"/>
-                        <TextBox Height="23" Width="120" x:Name="textSplats" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="10"/>
-                    </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label x:Name="labelSplat" Content="Size of Splats: " Margin="6" Width="120" IsEnabled="False"/>
+                            <TextBox Height="23" Width="120" x:Name="textSplats" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="10"/>
+                        </StackPanel>
 
-                    <StackPanel Orientation="Horizontal">
-                        <Label x:Name="labelBoundary" Content="Boundary Coeff.: " Margin="6" Width="120" IsEnabled="False"/>
-                        <TextBox Height="23" Width="120" x:Name="textBoundary" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="0,7"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Label x:Name="labelBoundary" Content="Boundary Coeff.: " Margin="6" Width="120" IsEnabled="False"/>
+                            <TextBox Height="23" Width="120" x:Name="textBoundary" TextWrapping="Wrap" IsEnabled="False" Margin="6px" Text="0,7"/>
+                        </StackPanel>
+                        <Button x:Name="buttonCluster" IsEnabled="False" Click="buttonCluster_Click" Margin="6px" Content="Cluster"/>
                     </StackPanel>
-                    <Button x:Name="buttonCluster" IsEnabled="False" Click="buttonCluster_Click" Margin="6px" Content="Cluster"/>
-                </StackPanel>
-            </GroupBox>
+            </StackPanel>
+            
         </Grid>
     </Grid>
 </Window>

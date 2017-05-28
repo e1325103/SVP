@@ -103,7 +103,7 @@ boundaries = cell(numClusters, 1);
 percentCluster = zeros(numClusters, 1);
 countClusterTotal = size(lineIDs, 1);
 
-parfor i = 1:numClusters
+for i = 1:numClusters
     gridStreamlines = reducedStreamlines(:,lineIDs == i);
     minStreamlines = min(gridStreamlines, [], 2) - repmat(sampleOffset, numBasis, 1);
     maxStreamlines = max(gridStreamlines, [], 2) + repmat(sampleOffset, numBasis, 1);
