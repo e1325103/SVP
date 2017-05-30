@@ -1,0 +1,359 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Streamline Variability Calculation</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-05-30"><meta name="DC.source" content="calculateVariabilityLinesPar.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Streamline Variability Calculation</h1><!--introduction--><p>Transforms a given streamline with PCA into a another space. This streamline points in this space are sampled and the statistical parameters of each cluster (median, variance) are transformed back into the original space.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Parameter</a></li><li><a href="#2">Calculate PCA Basis</a></li><li><a href="#3">Reduce Streamlines</a></li><li><a href="#4">Cluster Reduced Streamlines with k-Means</a></li><li><a href="#5">Calculate the Median Streamline for each Cluster</a></li><li><a href="#6">Uniformly Sample each Cluster's Convidence Lobe</a></li></ul></div><h2>Parameter<a name="1"></a></h2><div><ul><li><b>connections</b> m*n matrix with m data points (x-, y-coordinates) and n streamlines</li><li><b>numClusters</b> Number of generated clusters <i>Default: 3</i></li><li><b>numBasis</b> Number of basis used for the reconstruction <i>Default: 3</i></li><li><b>convInter</b> Convidence intervall of the variability lines <i>Default: 0.9</i></li><li><b>highNumberSamples</b> 0 =  if more data points than streamlines; 1 = if more streamlines than samples (use transpose trick) <i>Default: 0</i></li><li><b>numSamples</b> Number of samples per cluster <i>Default: 30000</i></li></ul></div><pre class="codeinput">streamlines = connections';
+
+pYMin = 1;
+pYMax = (size(streamlines, 1) / 2);
+pXMin  = pYMax + 1;
+pXMax = size(streamlines, 1);
+colors = <span class="string">'rbgycm'</span>;
+
+<span class="keyword">if</span>(exist(<span class="string">'boundCoeff'</span>, <span class="string">'var'</span>)~=1)
+    boundCoeff = 0.7;
+<span class="keyword">end</span>
+
+<span class="keyword">if</span>(exist(<span class="string">'splatSize'</span>, <span class="string">'var'</span>)~=1)
+    splatSize = 10;
+<span class="keyword">end</span>
+
+<span class="keyword">if</span>(exist(<span class="string">'numClusters'</span>, <span class="string">'var'</span>)~=1)
+    numClusters = 3;
+<span class="keyword">end</span>
+
+<span class="keyword">if</span>(exist(<span class="string">'highNumberSamples'</span>, <span class="string">'var'</span>)~=1)
+    highNumberSamples = 0;
+<span class="keyword">end</span>
+
+<span class="keyword">if</span>(exist(<span class="string">'numBasis'</span>, <span class="string">'var'</span>)~=1)
+    numBasis = 3;
+<span class="keyword">end</span>
+
+<span class="keyword">if</span>(exist(<span class="string">'convInter'</span>, <span class="string">'var'</span>)~=1)
+    convInter = 0.9;
+<span class="keyword">end</span>
+
+<span class="keyword">if</span>(exist(<span class="string">'numSamples'</span>, <span class="string">'var'</span>)~=1)
+    numSamples = 1000;
+<span class="keyword">end</span>
+
+sampleOffset = 2;
+
+meanVector = mean(streamlines, 2);
+
+streamlines = streamlines - repmat(meanVector, 1, size(streamlines, 2));
+</pre><h2>Calculate PCA Basis<a name="2"></a></h2><p>The PCA basis are calculated from the streamlines, if the highNumberSamples flag is not set the transpose trick is used. The basis are sorted based on their coresponding eigenvalues in decending order.</p><pre class="codeinput"><span class="keyword">if</span> ~highNumberSamples
+	[eigenvectors, eigenvalues] = eig(streamlines' * streamlines, <span class="string">'vector'</span>);
+<span class="keyword">else</span>
+    [eigenvectors, eigenvalues] = eig(streamlines * streamlines', <span class="string">'vector'</span>);
+<span class="keyword">end</span>
+[eigenvectors, eigenvalues] = eigsort(eigenvectors, eigenvalues);
+</pre><h2>Reduce Streamlines<a name="3"></a></h2><p>The PCA transformed multidimensonal streamline points get reduced to a maximum dimensionality of numBasis.</p><pre class="codeinput"><span class="keyword">if</span> ~highNumberSamples
+	basis = determineBasis(streamlines, eigenvectors);
+<span class="keyword">else</span>
+    basis = eigenvectors;
+<span class="keyword">end</span>
+reducedStreamlines = reduceData(basis, numBasis, streamlines);
+</pre><h2>Cluster Reduced Streamlines with k-Means<a name="4"></a></h2><p>Each streamline gets assigned to a cluster in PCA space which represent the trends in the data using k-Means.</p><pre class="codeinput">lineIDs = kmeans(reducedStreamlines', numClusters);
+</pre><h2>Calculate the Median Streamline for each Cluster<a name="5"></a></h2><p>For each cluster the median streamlines is calculated based on the assigned PCA transformed streamlines.</p><pre class="codeinput">centerLines = zeros(numClusters, numBasis);
+
+<span class="keyword">for</span> i = 1:numClusters
+    centerLines(i, :) = median(reducedStreamlines(:, lineIDs==i), 2)';
+
+<span class="keyword">end</span>
+
+reconStreamlines = reconstructData(basis, numBasis, reducedStreamlines, meanVector);
+reconCenterLines = reconstructData(basis, numBasis, centerLines', meanVector);
+</pre><h2>Uniformly Sample each Cluster's Convidence Lobe<a name="6"></a></h2><p>The region around all clusters is sampled using the Monte-Carlo Method. The points in a rectengular region are randomly chosen and only those who lie with in the bounds of the convidence elipsoid get chosen. To check if a point lies with the multidimensional elipsoid its Mahalanobis distance is calculated and compared against a threshold. The points inside the PCA elipsoid get transformed back into streamlines and are splated in a buffer from which the boundary region is extracted for each cluster.</p><pre class="codeinput">threshold = sqrt(chi2inv(convInter, numBasis));
+boundaries = cell(numClusters, 1);
+percentCluster = zeros(numClusters, 1);
+countClusterTotal = size(lineIDs, 1);
+
+<span class="keyword">parfor</span> i = 1:numClusters
+    gridStreamlines = reducedStreamlines(:,lineIDs == i);
+    minStreamlines = min(gridStreamlines, [], 2) - repmat(sampleOffset, numBasis, 1);
+    maxStreamlines = max(gridStreamlines, [], 2) + repmat(sampleOffset, numBasis, 1);
+    samples = rand(numBasis, numSamples) .* repmat((maxStreamlines - minStreamlines), 1, numSamples) + repmat(minStreamlines, 1, numSamples);
+    samples = samples';
+    <span class="keyword">if</span> size(gridStreamlines, 2) &gt; size(gridStreamlines, 1)
+        mahalDist = mahal(samples, gridStreamlines');
+
+        samplesInside = samples(mahalDist &lt;= threshold, :)';
+        <span class="comment">%eval(strcat('sampleStreamlines', int2str(i), '=reconstructData(basis, numBasis, samplesInside, meanVector);'));</span>
+        sampleStreamlines = reconstructData(basis, numBasis, samplesInside, meanVector);
+        <span class="keyword">if</span> ~highNumberSamples
+            samplesInside = samplesInside';
+        <span class="keyword">end</span>
+    <span class="keyword">else</span>
+        sampleStreamlines = reconCenterLines(:,i);
+        <span class="comment">%eval(strcat('sampleStreamlines', int2str(i), '=reconCenterLines(:,',int2str(i),');'));</span>
+    <span class="keyword">end</span>
+    percentCluster(i) = sum(lineIDs == i) / countClusterTotal;
+    sampleStreamlines = sampleStreamlines';
+
+    I = zeros(1000, 1000, <span class="string">'uint8'</span>);
+    minVal = min(min(sampleStreamlines));
+    maxVal = max(max(sampleStreamlines));
+    tempStreamlines = (((sampleStreamlines - minVal) / (maxVal - minVal)) * 999) + 1;
+    <span class="keyword">for</span> r = tempStreamlines'
+        <span class="keyword">for</span> c = 1:((size(r) / 2) - 1)
+            x = [r(c) r(c + 1)];
+            y = [r(pXMin + c - 1) r(pXMin + c)];
+            nPoints = max(abs(diff(x)), abs(diff(y)))+1;
+            rIndex = round(linspace(y(1), y(2), nPoints));
+            cIndex = round(linspace(x(1), x(2), nPoints));
+            index = sub2ind(size(I), rIndex, cIndex);
+            I(index) = 255;
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    se = strel(<span class="string">'disk'</span>, splatSize);
+    I = imdilate(I, se);
+    [x, y] = find(I);
+    k = boundary(x, y, boundCoeff);
+    x = ((x(k) - 1) / 999) * (maxVal - minVal) + minVal;
+    y = ((y(k) - 1) / 999) * (maxVal - minVal) + minVal;
+    boundaries{i} = [y; x];
+<span class="keyword">end</span>
+
+<span class="keyword">for</span> i = 1:numClusters
+    eval(strcat(<span class="string">'boundary'</span>, int2str(i), <span class="string">'=boundaries{'</span>, int2str(i), <span class="string">'}'';'</span>));
+<span class="keyword">end</span>
+
+reconCenterLines = reconCenterLines';
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Streamline Variability Calculation
+% Transforms a given streamline with PCA into a another space. This
+% streamline points in this space are sampled and the statistical
+% parameters of each cluster (median, variance) are transformed back into
+% the original space.
+
+%% Parameter
+%
+% * *connections* m*n matrix with m data points (x-, y-coordinates) and n streamlines
+% * *numClusters* Number of generated clusters _Default: 3_
+% * *numBasis* Number of basis used for the reconstruction _Default: 3_
+% * *convInter* Convidence intervall of the variability lines _Default: 0.9_
+% * *highNumberSamples* 0 =  if more data points than streamlines; 1 = if
+% more streamlines than samples (use transpose trick) _Default: 0_
+% * *numSamples* Number of samples per cluster _Default: 30000_
+
+
+streamlines = connections';
+
+pYMin = 1;
+pYMax = (size(streamlines, 1) / 2);
+pXMin  = pYMax + 1;
+pXMax = size(streamlines, 1);
+colors = 'rbgycm';
+    
+if(exist('boundCoeff', 'var')~=1)
+    boundCoeff = 0.7;
+end  
+
+if(exist('splatSize', 'var')~=1)
+    splatSize = 10;
+end
+    
+if(exist('numClusters', 'var')~=1)
+    numClusters = 3;
+end
+
+if(exist('highNumberSamples', 'var')~=1)
+    highNumberSamples = 0;
+end
+
+if(exist('numBasis', 'var')~=1)
+    numBasis = 3;
+end
+
+if(exist('convInter', 'var')~=1)
+    convInter = 0.9;
+end
+
+if(exist('numSamples', 'var')~=1)
+    numSamples = 1000;
+end
+
+sampleOffset = 2;
+
+meanVector = mean(streamlines, 2);
+
+streamlines = streamlines - repmat(meanVector, 1, size(streamlines, 2));
+
+%% Calculate PCA Basis
+% The PCA basis are calculated from the streamlines, if the
+% highNumberSamples flag is not set the transpose trick is used. The basis
+% are sorted based on their coresponding eigenvalues in decending order.
+
+if ~highNumberSamples
+	[eigenvectors, eigenvalues] = eig(streamlines' * streamlines, 'vector');
+else
+    [eigenvectors, eigenvalues] = eig(streamlines * streamlines', 'vector');
+end
+[eigenvectors, eigenvalues] = eigsort(eigenvectors, eigenvalues);
+
+%% Reduce Streamlines
+% The PCA transformed multidimensonal streamline points get reduced to a
+% maximum dimensionality of numBasis.
+
+if ~highNumberSamples
+	basis = determineBasis(streamlines, eigenvectors);
+else
+    basis = eigenvectors;
+end
+reducedStreamlines = reduceData(basis, numBasis, streamlines);
+
+%% Cluster Reduced Streamlines with k-Means
+% Each streamline gets assigned to a cluster in PCA space which represent
+% the trends in the data using k-Means.
+
+lineIDs = kmeans(reducedStreamlines', numClusters);
+
+%% Calculate the Median Streamline for each Cluster
+% For each cluster the median streamlines is calculated based on the
+% assigned PCA transformed streamlines.
+
+centerLines = zeros(numClusters, numBasis);
+
+for i = 1:numClusters
+    centerLines(i, :) = median(reducedStreamlines(:, lineIDs==i), 2)';
+    
+end
+
+reconStreamlines = reconstructData(basis, numBasis, reducedStreamlines, meanVector);
+reconCenterLines = reconstructData(basis, numBasis, centerLines', meanVector);
+
+%% Uniformly Sample each Cluster's Convidence Lobe
+% The region around all clusters is sampled using the Monte-Carlo Method.
+% The points in a rectengular region are randomly chosen and only those who
+% lie with in the bounds of the convidence elipsoid get chosen. To check if
+% a point lies with the multidimensional elipsoid its Mahalanobis distance
+% is calculated and compared against a threshold. The points inside the PCA
+% elipsoid get transformed back into streamlines and are splated in a
+% buffer from which the boundary region is extracted for each cluster.
+
+threshold = sqrt(chi2inv(convInter, numBasis));
+boundaries = cell(numClusters, 1);
+percentCluster = zeros(numClusters, 1);
+countClusterTotal = size(lineIDs, 1);
+
+parfor i = 1:numClusters
+    gridStreamlines = reducedStreamlines(:,lineIDs == i);
+    minStreamlines = min(gridStreamlines, [], 2) - repmat(sampleOffset, numBasis, 1);
+    maxStreamlines = max(gridStreamlines, [], 2) + repmat(sampleOffset, numBasis, 1);
+    samples = rand(numBasis, numSamples) .* repmat((maxStreamlines - minStreamlines), 1, numSamples) + repmat(minStreamlines, 1, numSamples);
+    samples = samples';
+    if size(gridStreamlines, 2) > size(gridStreamlines, 1)
+        mahalDist = mahal(samples, gridStreamlines');
+
+        samplesInside = samples(mahalDist <= threshold, :)';
+        %eval(strcat('sampleStreamlines', int2str(i), '=reconstructData(basis, numBasis, samplesInside, meanVector);'));
+        sampleStreamlines = reconstructData(basis, numBasis, samplesInside, meanVector);
+        if ~highNumberSamples
+            samplesInside = samplesInside';
+        end
+    else
+        sampleStreamlines = reconCenterLines(:,i);
+        %eval(strcat('sampleStreamlines', int2str(i), '=reconCenterLines(:,',int2str(i),');'));
+    end
+    percentCluster(i) = sum(lineIDs == i) / countClusterTotal;
+    sampleStreamlines = sampleStreamlines';
+    
+    I = zeros(1000, 1000, 'uint8');
+    minVal = min(min(sampleStreamlines));
+    maxVal = max(max(sampleStreamlines));
+    tempStreamlines = (((sampleStreamlines - minVal) / (maxVal - minVal)) * 999) + 1;
+    for r = tempStreamlines'
+        for c = 1:((size(r) / 2) - 1)
+            x = [r(c) r(c + 1)];
+            y = [r(pXMin + c - 1) r(pXMin + c)];
+            nPoints = max(abs(diff(x)), abs(diff(y)))+1;
+            rIndex = round(linspace(y(1), y(2), nPoints));
+            cIndex = round(linspace(x(1), x(2), nPoints));
+            index = sub2ind(size(I), rIndex, cIndex);
+            I(index) = 255; 
+        end
+    end
+    se = strel('disk', splatSize);
+    I = imdilate(I, se);
+    [x, y] = find(I);
+    k = boundary(x, y, boundCoeff);
+    x = ((x(k) - 1) / 999) * (maxVal - minVal) + minVal;
+    y = ((y(k) - 1) / 999) * (maxVal - minVal) + minVal;
+    boundaries{i} = [y; x];
+end
+
+for i = 1:numClusters
+    eval(strcat('boundary', int2str(i), '=boundaries{', int2str(i), '}'';'));
+end
+
+reconCenterLines = reconCenterLines';
+
+##### SOURCE END #####
+--></body></html>
