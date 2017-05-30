@@ -58,6 +58,9 @@ meanVector = mean(streamlines, 2);
 streamlines = streamlines - repmat(meanVector, 1, size(streamlines, 2));
 
 %% Calculate PCA Basis
+% The PCA basis are calculated from the streamlines, if the
+% highNumberSamples flag is not set the transpose trick is used. The basis
+% are sorted based on their coresponding eigenvalues in decending order.
 
 if ~highNumberSamples
 	[eigenvectors, eigenvalues] = eig(streamlines' * streamlines, 'vector');
@@ -67,6 +70,8 @@ end
 [eigenvectors, eigenvalues] = eigsort(eigenvectors, eigenvalues);
 
 %% Reduce Streamlines
+% The PCA transformed multidimensonal streamline points get reduced to a
+% maximum dimensionality of numBasis.
 
 if ~highNumberSamples
 	basis = determineBasis(streamlines, eigenvectors);
@@ -76,10 +81,14 @@ end
 reducedStreamlines = reduceData(basis, numBasis, streamlines);
 
 %% Cluster Reduced Streamlines with k-Means
+% Each streamline gets assigned to a cluster in PCA space which represent
+% the trends in the data using k-Means.
 
 lineIDs = kmeans(reducedStreamlines', numClusters);
 
 %% Calculate the Median Streamline for each Cluster
+% For each cluster the median streamlines is calculated based on the
+% assigned PCA transformed streamlines.
 
 centerLines = zeros(numClusters, numBasis);
 
@@ -96,7 +105,9 @@ reconCenterLines = reconstructData(basis, numBasis, centerLines', meanVector);
 % The points in a rectengular region are randomly chosen and only those who
 % lie with in the bounds of the convidence elipsoid get chosen. To check if
 % a point lies with the multidimensional elipsoid its Mahalanobis distance
-% is calculated and compared against a threshold.
+% is calculated and compared against a threshold. The points inside the PCA
+% elipsoid get transformed back into streamlines and are splated in a
+% buffer from which the boundary region is extracted for each cluster.
 
 threshold = sqrt(chi2inv(convInter, numBasis));
 boundaries = cell(numClusters, 1);
