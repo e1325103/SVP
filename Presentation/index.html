@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<title>SVP - Streamline Variability Plots</title>
+
+<style>
+body {font-family: "Lato", sans-serif}
+
+li {
+	margin-bottom:10px;
+	margin-top:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Visualisierung 2 - Streamline Variability Plots</h1>
+
+Nicolas Grossmann, 1325103 <br />
+Thomas Köppel, 1327052
+
+<h2>Overview</h2>
+
+<img src="SVPScreenshot.png" alt="Clustering Result of Streamline Data"/>
+<br />
+<br />
+We have implemented a flow visualization tool after "Streamline Variability Plots 
+for Characterizing the Uncertainty in Vector Field Ensembles" by Ferstl et al. 2016 allowing stream- and pathlines to be clustered into different trends emphazising 
+a streamline median (middle line of a cluster), the convidence lobes around the median and the number of streamlines in a specific cluster by a coloured barplot. 
+The streamlines are firstly generated, pca is transforming the data allowing clustering. 
+In each cluster a streamline median is determined and streamlines are sampled back and plotted in 2D using splatting and surrounded by a boundary. These Streamline
+Variability Plots show trends and statistical parameters (like the confidence interval) in the same domain the data resides.
+<br />
+<br />
+Furthermore, we applied this technique to a new kind of data: Travel Data, to create an informative visualization showing major tourism trends.
+<br />
+<br />
+<img src="Travel.png" alt="Clustering Result of Travel Data"/>
+<br />
+<br />
+
+<h2>Configuration</h2>
+
+<ul>
+<li>Matlab needs to be registered as a COM Server, 
+use following command in Matlab with administrator privelege</li>
+<ul>
+<li><strong>!matlab -regserver</strong>
+</li>
+</ul>
+<li>The following Matlab command needs to be executed and the output saved in the system variable PATH under Systemumgebungsvariablen bearbeiten/Umgebungsvariablen
+<ul>
+<li><strong>res = fullfile(matlabroot,'bin',computer('arch'))</strong>
+</li>
+</ul>
+</li>
+<li>
+The config file SVP.config needs to contain the relative paths from the exe file to the folder containing the Malab scripts and the u and v.csv files
+</li>
+<ul>
+<li>The first line contains the relative path to the Matlab files</li>
+<li>The second line contains the relative path to the csv files</li>
+
+</ul>
+</ul>
+
+</body>
+
+</html>
