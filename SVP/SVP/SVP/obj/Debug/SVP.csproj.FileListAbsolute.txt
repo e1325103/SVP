@@ -28,3 +28,4 @@ D:\WindData\Visualisierung_2\SVP\SVP\SVP\obj\Debug\SVP.Properties.Resources.reso
 D:\WindData\Visualisierung_2\SVP\SVP\SVP\obj\Debug\SVP.csproj.GenerateResource.Cache
 D:\WindData\Visualisierung_2\SVP\SVP\SVP\obj\Debug\SVP.exe
 D:\WindData\Visualisierung_2\SVP\SVP\SVP\obj\Debug\SVP.pdb
+D:\WindData\Visualisierung_2\SVP\SVP\SVP\bin\Debug\SVP.config

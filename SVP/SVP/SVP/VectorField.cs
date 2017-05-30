@@ -47,13 +47,14 @@ namespace SVP
         /// <summary>
         /// This method imports a hurricane dataset from a csv file and stores it in the 3 dim field array.
         /// </summary>
-        public void import()
+        /// <param name="path"></param>
+        public void import(string path)
         {
 
             field = new Vec2[500, 500, 48];
-            using (StreamReader uReader = new StreamReader(new FileStream("u.csv", FileMode.Open)))
+            using (StreamReader uReader = new StreamReader(new FileStream(path + "\\u.csv", FileMode.Open)))
             {
-                using (StreamReader vReader = new StreamReader(new FileStream("v.csv", FileMode.Open)))
+                using (StreamReader vReader = new StreamReader(new FileStream(path + "\\v.csv", FileMode.Open)))
                 {
                     for (int i = 0; i < 48; i++)
                     {

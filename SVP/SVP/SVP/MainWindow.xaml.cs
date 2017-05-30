@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -47,6 +48,9 @@ namespace SVP
         int sizeSplats;
         float boundaryCoeff;
 
+        string matlabPath = "";
+        string ressourcePath = "";
+
         /// <summary>
         /// Constructor of the Mainwindow. The matlab connection and other variables get initialized. 
         /// </summary>
@@ -64,7 +68,14 @@ namespace SVP
             matlab = new MLApp.MLApp();
             string current = Directory.GetCurrentDirectory();
 
-            current = "cd '" + current.Substring(0, current.IndexOf("SVP")) + "Matlab'";
+            using (StreamReader reader = new StreamReader("SVP.config"))
+            {
+                matlabPath = current + "\\" + reader.ReadLine();
+                ressourcePath = current + "\\" + reader.ReadLine();
+            }
+
+            //current = "cd '" + current.Substring(0, current.IndexOf("SVP")) + "Matlab'";
+            current = "cd '" + matlabPath + "'";
             matlab.Execute(current);
 
             travel = new Travel();
@@ -366,7 +377,7 @@ namespace SVP
             buttonCluster.IsEnabled = false;
 
             vectorField = new VectorField(lineCanvas.ActualWidth);
-            vectorField.import();
+            vectorField.import(ressourcePath);
             streamlineImage.Source = vectorField.createImage();
 
             buttonSimulate.IsEnabled = true;
@@ -508,15 +519,6 @@ namespace SVP
             }
 
             SetClusterFieldsEnabled(true);
-        }
-
-        /// <summary>
-        /// This method is called after the Cluster button for the coastlines/travel dataset gets pressed. It reads the values for the clustering and calls the function cluster.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void buttonTravelCluster_Click(object sender, RoutedEventArgs e)
-        {
         }
     }
 }
